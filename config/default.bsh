@@ -1,8 +1,9 @@
 &name
 default
+&originzone
+/dancres
 &code
 import org.dancres.gossip.astrolabe.*;
-
 aggregate( Script anEnclosing, Collection aMibs, Mib aTarget ) {
   HashSet servers = new HashSet();
   HashSet contacts = new HashSet();
