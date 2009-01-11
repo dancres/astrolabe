@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @todo Apply logic to figure out the latest version of script and run that rather than whichever version we saw
  * last during scanning for scripts.
+ *
+ * @todo If we add security certificates enforce the spread of scripts via that mechanism as opposed to the simple
+ * rule of "the zone we're aggregating or one above it must originate the script".
  */
 public class MibAggregator {
 	private static Logger _logger = LoggerFactory.getLogger(MibAggregator.class);
@@ -33,7 +36,7 @@ public class MibAggregator {
 		 */
 		
 		HashMap<String, Script> myScriptMap = new HashMap<String, Script>();
-		Collection<Mib> myMibList = new ArrayList<Mib>();		
+		Collection<Mib> myMibList = new ArrayList<Mib>();
 		Collection<Zone> myZoneList = _zone.getChildren();
 		Iterator<Zone> myZones = myZoneList.iterator();
 		
@@ -45,11 +48,11 @@ public class MibAggregator {
 			Mib myZoneMib = myZone.getMib();
 			myMibList.add(myZoneMib);
 			
-			Map<String, Object> myAttrMap = myZoneMib.getAttributes();
-			Iterator<String> myKeys = myAttrMap.keySet().iterator();
+			Map myAttrMap = myZoneMib.getAttributes();
+			Iterator myKeys = myAttrMap.keySet().iterator();
 			
 			while (myKeys.hasNext()) {
-				String myKey = myKeys.next();
+				String myKey = (String) myKeys.next();
 				_logger.debug("Checking: " + myZone.getName() + " Mib key: " + myKey);
 				
 				if (myKey.startsWith("&")) {
@@ -77,5 +80,7 @@ public class MibAggregator {
 		
 		if (_zone.getMib().getIssued() == myIssued)
 			_zone.getMib().setIssued(System.currentTimeMillis());
+
+        // Make sure any scripts that have been propogated are acceptable
 	}
 }

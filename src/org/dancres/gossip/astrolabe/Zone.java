@@ -299,7 +299,7 @@ public class Zone {
 				 *  existed until the arrival of this new zone, it makes sense to use it's rep, contact and other
 				 *  fields to fill in the new child.
 				 */
-				Mib myMib = new Mib(aZone.getMib().getRepresentative());				
+				MibImpl myMib = new MibImpl(aZone.getMib().getRepresentative());
 				myChild.add(myMib);
 				
 				myMib.setContacts(new HashSet<HostDetails>(aZone.getMib().getContacts()));

@@ -1,20 +1,10 @@
 package org.dancres.gossip.astrolabe;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.dancres.gossip.discovery.HostDetails;
 import org.dancres.gossip.io.Exportable;
 
-import com.google.gson.Gson;
 
 /**
  * Holds attributes for a {@link Zone}.  Standard attributes are:
@@ -29,133 +19,58 @@ import com.google.gson.Gson;
  * One may also store scripts as attributes.  In such a case, the name of the attribute must start with <code>&</code>
  * and the value should be a {@link Script} object.
  */
-public class Mib implements Exportable {
-	private static final String ISSUED_ATTR = "issued";
-	private static final String REPRESENTATIVE_ATTR = "representative";
-	private static final String NMEMBERS_ATTR = "nmembers";
-	private static final String CONTACTS_ATTR = "contacts";
-	private static final String SERVERS_ATTR = "servers";
-	
-	private ConcurrentHashMap _attributes;
+public interface Mib extends Exportable {
 
-	/**
-	 * @deprecated
-	 */
-	private Zone _owner;
-	private long _touched;
-	
-	/**
-	 * @param aRepresentative is the issuer (<code>LocalID.get()</code>) of the Mib.
-	 */
-	public Mib(String aRepresentative) {
-		_attributes = new ConcurrentHashMap();
-		
-		setIssued(0);
-		setRepresentative(aRepresentative);
-		setNMembers(0);		
-		setContacts(new HashSet<HostDetails>());
-		setServers(new HashSet<HostDetails>());
-	}
-	
-	public Mib(Reader aReader) throws IOException {
-		Gson myGson = new Gson();
-		BufferedReader myReader = new BufferedReader(aReader);
-		GsonUtils myUtils = new GsonUtils(myGson, myReader);
-		String myMapType = myGson.fromJson(myReader.readLine(), String.class);
-		Map myAttrs = myUtils.readMap(myMapType);
-		
-		_attributes = new ConcurrentHashMap(myAttrs);
-	}
-	
-	/**
-	 * @deprecated
-	 * @param anOwner
-	 */
-	public void setZone(Zone anOwner) {
-		_owner = anOwner;
-	}
+    /**
+     * Use this method to gain access to the Mib's attributes for purposes of live modification.  Use
+     * <code>exportAttributes</code> to obtain a copy of the Mib's attributes suitable for transfer between VM's.
+     * @return the live attributes as a Map of String keys and Object values.
+     */
+    public Map getAttributes();
 
-	public void setIssued(long anIssued) {
-		_attributes.put(ISSUED_ATTR, new Long(anIssued));
-	}
+    /**
+     * @return an immutable collection of the contacts
+     */
+    public Set getContacts();
 
-	public long getIssued() {
-		return ((Long) _attributes.get(ISSUED_ATTR)).longValue();
-	}
-	
-	private void setRepresentative(String aRep) {
-		_attributes.put(REPRESENTATIVE_ATTR, aRep);
-	}
+    public long getIssued();
 
-	public String getRepresentative() {
-		return (String) _attributes.get(REPRESENTATIVE_ATTR);
-	}
-	
-	public void setContacts(Set aContacts) {
-		_attributes.put(CONTACTS_ATTR, aContacts);				
-	}
-	
-	/**
-	 * @return an immutable collection of the contacts
-	 */
-	public Set getContacts() {
-		return Collections.unmodifiableSet((Set) _attributes.get(CONTACTS_ATTR));
-	}
+    public long getNMembers();
 
-	public void setServers(Set aContacts) {
-		_attributes.put(SERVERS_ATTR, aContacts);				
-	}
-	
-	/**
-	 * @return an immutable collection of the servers
-	 */
-	public Set getServers() {
-		return Collections.unmodifiableSet((Set) _attributes.get(SERVERS_ATTR));
-	}
+    public String getRepresentative();
 
-	public void setNMembers(long aNumMembers) {
-		_attributes.put(NMEMBERS_ATTR, new Long(aNumMembers));
-	}
-	
-	public long getNMembers() {
-		return ((Long) _attributes.get(NMEMBERS_ATTR)).longValue();
-	}
-	
-	/**
-	 * Tracks the last time an update for this Mib from it's representative was received.  
-	 * This is used by <code>Zone</code> to decide which Mib to return in cases where the Zone is not a member of
-	 * the self chain.
-	 * 
-	 * @param aTime the time at which we received the update for this Mib
-	 */
-	public void setTouched(long aTime) {
-		_touched = aTime;
-	}
-	
-	/**
-	 * Tracks the last time an update for this Mib from it's representative was received.  
-	 * This is used by <code>Zone</code> to decide which Mib to return in cases where the Zone is not a member of
-	 * the self chain.
-	 */
-	public long getTouched() {
-		return _touched;
-	}
-	
-	/**
-	 * Use this method to gain access to the Mib's attributes for purposes of live modification.  Use
-	 * <code>exportAttributes</code> to obtain a copy of the Mib's attributes suitable for transfer between VM's.
-	 * @return the live attributes
-	 */
-	public Map<String, Object> getAttributes() {
-		return _attributes;
-	}
-	
-	public void export(Writer aWriter) throws IOException {
-		Map myAttrs = new HashMap(_attributes);
-		
-		Gson myGson = new Gson();
-		GsonUtils myUtils = new GsonUtils(myGson, aWriter);
-		
-		myUtils.writeMap(myAttrs);
-	}
+    /**
+     * @return an immutable collection of the servers
+     */
+    public Set getServers();
+
+    /**
+     * Tracks the last time an update for this Mib from it's representative was received.
+     * This is used by <code>Zone</code> to decide which Mib to return in cases where the Zone is not a member of
+     * the self chain.
+     */
+    public long getTouched();
+
+    public void setContacts(Set aContacts);
+
+    public void setIssued(long anIssued);
+
+    public void setNMembers(long aNumMembers);
+
+    public void setServers(Set aContacts);
+
+    /**
+     * Tracks the last time an update for this Mib from it's representative was received.
+     * This is used by <code>Zone</code> to decide which Mib to return in cases where the Zone is not a member of
+     * the self chain.
+     *
+     * @param aTime the time at which we received the update for this Mib
+     */
+    public void setTouched(long aTime);
+
+    /**
+     * @deprecated
+     * @param anOwner
+     */
+    public void setZone(Zone anOwner);
 }
