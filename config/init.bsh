@@ -7,7 +7,7 @@ Zone sys = mac.get("system");
 Mib sysMib = sys.getMib();
 
 InputStream myFile = new FileInputStream("config/default.bsh");
-Script myScr = Script.create("&default", myFile);
+Script myScr = Script.create(myFile);
 myFile.close();
 
 sysMib.getAttributes().put(myScr.getName(), myScr);
