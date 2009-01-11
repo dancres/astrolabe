@@ -1,0 +1,16 @@
+import org.dancres.gossip.astrolabe.*;
+
+Zone root = Zones.getRoot();
+Zone mac = root.find(LocalID.get());
+Zone sys = mac.get("system");
+
+Mib sysMib = sys.getMib();
+
+InputStream myFile = new FileInputStream("config/default.bsh");
+Script myScr = Script.create("&default", myFile);
+myFile.close();
+
+sysMib.getAttributes().put(myScr.getName(), myScr);
+
+new AggregationProcess().run();
+

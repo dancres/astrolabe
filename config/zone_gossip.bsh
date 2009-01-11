@@ -1,0 +1,7 @@
+source("config/init.bsh");
+Main.publishAdvert();
+source("config/dump.bsh");
+
+myZone = Zones.getRoot().find("/dancres");
+myGossiper = new ZoneGossiper(myZone, Main._service);
+myGossiper.run();

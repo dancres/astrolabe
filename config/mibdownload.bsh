@@ -1,0 +1,11 @@
+source("config/init.bsh");
+
+MibSummary mySummary = new MibSummary("/dancres/dredd2", "/dancres/dredd2", 0);
+Set mySet = new HashSet();
+mySet.add(mySummary);
+
+import org.dancres.gossip.net.*;
+
+MibDownloader.pull(Main._service.getContactDetails(), mySet, Main._service);
+
+Main.publishAdvert();

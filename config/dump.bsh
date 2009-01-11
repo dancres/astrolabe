@@ -1,0 +1,16 @@
+import org.dancres.gossip.astrolabe.*;
+
+dumpMibs(Zone aZone) {
+	dumpMibs(aZone, "");
+}
+
+dumpMibs(Zone aZone, String anIndent) {
+	String myName = aZone.getName();
+	
+	print(anIndent + "Zone:" + myName + " -> " + aZone.getMib().getAttributes());
+	
+	myZones = aZone.getChildren().iterator();
+	while (myZones.hasNext()) {
+		dumpMibs(myZones.next(), anIndent + "  ");
+	}
+}			

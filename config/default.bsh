@@ -1,0 +1,38 @@
+import org.dancres.gossip.astrolabe.*;
+
+aggregate( Script anEnclosing, Collection aMibs, Mib aTarget ) {
+  HashSet servers = new HashSet();
+  HashSet contacts = new HashSet();
+  long depth = 0;
+  long memberCount = 0;
+
+  for (m : aMibs) {
+    memberCount = memberCount + m.getNMembers();
+
+    mibDepth = m.getAttributes().get("depth");
+    if (mibDepth != null) {
+	  if (mibDepth > depth)
+	    depth = mibDepth;
+	}
+	
+	merge(servers, m.getServers());
+	merge(contacts, m.getContacts());
+  }
+
+  aTarget.setNMembers(memberCount);
+  aTarget.getAttributes().put("depth", depth + 1);
+  aTarget.setContacts(contacts);
+  aTarget.setServers(servers);
+
+  if (aTarget.getAttributes().get(anEnclosing.getName()) == null)
+    aTarget.getAttributes().put(anEnclosing.getName(), anEnclosing.dup());
+}
+
+merge(HashSet aResult, Set aSource) {
+	for (e : aSource) {
+		if (aResult.size() == 3)
+			return;
+		else
+			aResult.add(e);
+	}
+}
