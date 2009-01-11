@@ -45,22 +45,6 @@ public class GsonUtilTest {
 		_populatedMap.put("collection", _populatedList);
 	}
 	
-	@Test public void madness() throws Exception {
-		Gson myGson = new Gson();
-		ByteArrayOutputStream myBuffer = new ByteArrayOutputStream();
-		Writer myWriter = new OutputStreamWriter(myBuffer);
-		myGson.toJson("abcdef");
-		myGson.toJson(1);
-		myWriter.close();
-		
-		ByteArrayInputStream myInput = new ByteArrayInputStream(myBuffer.toByteArray());
-		Reader myReader = new InputStreamReader(myInput);
-		
-		myGson = new Gson();
-		String myString = myGson.fromJson(myReader, String.class);
-		Long myLong = myGson.fromJson(myReader, Long.class);
-	}
-	
 	@Test public void testEmptyMapWrite() throws Exception {
 		Gson myGson = new Gson();
 		

@@ -11,10 +11,10 @@ import com.google.gson.Gson;
 
 /**
  * Gson works pretty well but doesn't want to parse collections or maps containing values of more than one type or of
- * a type only known at runtime.  This class provides some utility methods to handle these edge cases.
- * 
- * @todo Write classes to represent type/value pairs etc so Gson can properly handle it and we generate properly valid
- * json.  Collection first, then Map.
+ * a type only known at runtime.  This limitation in combination with Gson's inability to parse single Gson elements
+ * means we must split the output across lines so that we can force Gson to parse a term at a time.
+ *
+ * @todo Consider use of serializers and deserializers to work around the issue above.
  */
 public class GsonUtils {
 	private Gson _gson;
@@ -87,12 +87,6 @@ public class GsonUtils {
 		System.out.println();
 	}
 	
-	/**
-	 * <b>Hack:</b> Reading a line and then feeding it to Gson as it seemingly over-consumes the Reader resulting in
-	 * erroneous EOF.
-	 * 
-	 * @todo Fix hack
-	 */
 	public Map readMap(String aPrimitiveType) throws IOException {
 		try {
 			Map myMap = (Map) Class.forName(aPrimitiveType).newInstance();
@@ -182,12 +176,6 @@ public class GsonUtils {
 		}		
 	}
 	
-	/**
-	 * <b>Hack:</b> Reading a line and then feeding it to Gson as it seemingly over-consumes the Reader resulting in
-	 * erroneous EOF.
-	 * 
-	 * @todo Fix hack
-	 */
 	public Collection readCollection(String aPrimitiveType) throws IOException {
 		try {
 			Collection myCollection = (Collection) Class.forName(aPrimitiveType).newInstance();

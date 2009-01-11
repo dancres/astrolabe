@@ -12,14 +12,14 @@ import com.google.gson.Gson;
 
 /**
  * A class to convert a collection of MibSummary's to/from an http-friendly wire format (currently JSON).
+ *
+ * Gson works pretty well but doesn't want to parse collections or maps containing values of more than one type or of
+ * a type only known at runtime.  This limitation in combination with Gson's inability to parse single Gson elements
+ * means we must split the output across lines so that we can force Gson to parse a term at a time.
+ *
+ * @todo Consider use of serializers and deserializers to work around the issue above.
  */
 public class MibSummaryCodec {
-	/**
-	 * <b>Hack:</b> Reading a line and then feeding it to Gson as it seemingly over-consumes the Reader resulting in
-	 * erroneous EOF.
-	 * 
-	 * @todo Fix hack
-	 */	
 	public Set<MibSummary> getSummary(Reader aReader) throws IOException {
 		Gson myGson = new Gson();
 		HashSet<MibSummary> mySet = new HashSet<MibSummary>();
