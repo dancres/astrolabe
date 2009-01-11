@@ -66,7 +66,17 @@ public class Mib implements Exportable {
 		
 		_attributes = new ConcurrentHashMap(myAttrs);
 	}
-	
+
+    private Mib(Zone anOwner, long aTouched, ConcurrentHashMap anAttributes) {
+        _owner = anOwner;
+        _touched = aTouched;
+        _attributes = anAttributes;
+    }
+
+    public Mib dup() {
+        return new Mib(_owner, _touched, new ConcurrentHashMap(_attributes));
+    }
+
 	/**
 	 * @deprecated
 	 * @param anOwner

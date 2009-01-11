@@ -23,6 +23,7 @@ import java.io.Reader;
 public class Script {
     public static final String CERT_NAME = "&name";
     public static final String CERT_SCRIPT = "&code";
+    public static final String CERT_ORIGIN = "&originzone";
 
 	private transient Interpreter _interp;
 	private transient AggregationFunction _func;
@@ -55,6 +56,10 @@ public class Script {
 	public String toString() {
 		return _cert.toString();
 	}
+
+    public String getAttribute(String aField) {
+        return _cert.getValue(aField);
+    }
 	
 	private String concat(Collection<String> aStrings) {
 		StringBuffer myConcatenation = new StringBuffer();

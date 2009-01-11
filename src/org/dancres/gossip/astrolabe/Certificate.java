@@ -93,20 +93,21 @@ public class Certificate {
 
             if ((myLine == null) && (myValueState)) {
                 // We have a variable to store
-                myAttrs.put(myVarName, myValueBuffer.toString());
+                myAttrs.put(myVarName, replaceEmpty(myValueBuffer.toString()));
             }
 
             if (myLine == null)
                 break;
 
-            if (myLine.trim().length() == 0) {
+            myLine = myLine.trim();
+            if (myLine.length() == 0) {
                 continue;
             }
 
             if (myLine.startsWith("&")) {
                 if (myValueState) {
                     // End of previous value - and the start of another
-                    myAttrs.put(myVarName, myValueBuffer.toString());
+                    myAttrs.put(myVarName, replaceEmpty(myValueBuffer.toString()));
                     myVarName = myLine.trim();
                     myValueBuffer = new StringBuffer();
                 } else {
@@ -135,6 +136,16 @@ public class Certificate {
         }
 
         return new Certificate(myAttrs);
+    }
+
+    /**
+     * Convert matched double-quotes into an empty string
+     */
+    private static String replaceEmpty(String aString) {
+        if (aString.equals("\"\""))
+            return "";
+        else
+            return aString;
     }
 
     public String toString() {

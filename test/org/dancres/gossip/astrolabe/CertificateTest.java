@@ -11,6 +11,7 @@ public class CertificateTest {
 
     private StringBuffer _validScript;
     private StringBuffer _invalidScript;
+    private StringBuffer _quoteScript;
 
     @Before
     public void init() {
@@ -27,7 +28,11 @@ public class CertificateTest {
         _invalidScript.append("&var2\n");
         _invalidScript.append("a multi-line\n");
         _invalidScript.append("script to see if we cope\n");
-    }
+
+        _quoteScript = new StringBuffer();
+        _quoteScript.append("&var1\n");
+        _quoteScript.append("\"\"");
+}
 
     @Test public void checkRead() throws IOException {
         ByteArrayInputStream myBuffer = new ByteArrayInputStream(_validScript.toString().getBytes());
@@ -50,6 +55,13 @@ public class CertificateTest {
         }
 
         Assert.assertTrue(passed);
+    }
+
+    @Test public void canQuote() throws IOException {
+        ByteArrayInputStream myBuffer = new ByteArrayInputStream(_quoteScript.toString().getBytes());
+        Certificate myCert = Certificate.create(new InputStreamReader(myBuffer));
+
+        Assert.assertTrue(myCert.getValue("&var1").equals(""));
     }
 
     @Test public void willGson() throws IOException {
