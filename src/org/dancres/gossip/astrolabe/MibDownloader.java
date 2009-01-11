@@ -110,7 +110,7 @@ public class MibDownloader {
 
 					if (entity != null) {
 						myReader = new InputStreamReader(entity.getContent());
-						MibImpl myMib = new MibImpl(myReader);
+						Mib myMib = new Mib(myReader);
 						myReader.close();
 
 						_logger.debug("Got back Mib: " + myMib.getAttributes());

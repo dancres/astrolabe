@@ -54,7 +54,7 @@ public class NodeListener implements DiscoveryListener {
 		 */
 		if (myHostsZone == null) {
 			myHostsZone = new Zone(myHostsId);
-			MibImpl myHostsMib = new MibImpl(myHostsId);
+			Mib myHostsMib = new Mib(myHostsId);			
 			myHostsZone.add(myHostsMib);
 
 			HashSet myDetails = new HashSet();
