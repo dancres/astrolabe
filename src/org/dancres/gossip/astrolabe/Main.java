@@ -1,20 +1,13 @@
 package org.dancres.gossip.astrolabe;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URL;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
 
-import org.dancres.gossip.discovery.DiscoveryListener;
 import org.dancres.gossip.discovery.HostDetails;
 import org.dancres.gossip.discovery.RegistrarFactory;
 import org.dancres.gossip.net.NetworkUtils;
 import org.dancres.gossip.net.Service;
-import org.dancres.gossip.peersampling.PeerSampler;
-import org.dancres.gossip.peersampling.RemotePeerSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
