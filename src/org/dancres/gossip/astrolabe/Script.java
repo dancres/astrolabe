@@ -16,10 +16,9 @@ import java.io.Reader;
  * 
  * <p><b>Note:</b> that a script that is "active" (added to a Mib) should not be added to any other Mib.  Instead
  * add a <code>dup()</code>.</p>
- * 
- * @todo Add support for appropriate fields - perhaps by placing them in the bsh script and extracting them via
- * interp.get.  Would mean separating out the interpreter init so it could be called early to get the variables setup
- * which we'd then access via methods on the Script instance.
+ *
+ * <p>A script is a kind of certificate - at minimum it must contain two attributes &name and &code representing it's name
+ * and the associated code.</p>
  */
 public class Script {
     public static final String CERT_NAME = "&name";

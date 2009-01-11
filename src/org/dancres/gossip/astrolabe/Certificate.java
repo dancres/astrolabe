@@ -8,9 +8,57 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * The base abstraction for a certificate
+ * <p>The base abstraction for a certificate.</p>
  *
- * @author dan
+ * <p>Certificates are a collection of text lines.  An entry in a certificate consists of an attribute name (starting with &)
+ * and a value.  An attribute name appears on a line alone, followed by the value (which may span multiple lines).</p>
+ *
+ * <p>An example certificate would be:</p>
+ * <pre>
+    &name
+    default
+    &code
+    import org.dancres.gossip.astrolabe.*;
+
+    aggregate( Script anEnclosing, Collection aMibs, Mib aTarget ) {
+      HashSet servers = new HashSet();
+      HashSet contacts = new HashSet();
+      long depth = 0;
+      long memberCount = 0;
+
+      for (m : aMibs) {
+        memberCount = memberCount + m.getNMembers();
+
+        mibDepth = m.getAttributes().get("depth");
+        if (mibDepth != null) {
+    	  if (mibDepth > depth)
+    	    depth = mibDepth;
+    	}
+
+    	merge(servers, m.getServers());
+    	merge(contacts, m.getContacts());
+      }
+
+      aTarget.setNMembers(memberCount);
+      aTarget.getAttributes().put("depth", depth + 1);
+      aTarget.setContacts(contacts);
+      aTarget.setServers(servers);
+
+      if (aTarget.getAttributes().get(anEnclosing.getName()) == null)
+        aTarget.getAttributes().put(anEnclosing.getName(), anEnclosing.dup());
+    }
+
+    merge(HashSet aResult, Set aSource) {
+    	for (e : aSource) {
+    		if (aResult.size() == 3)
+    			return;
+    		else
+    			aResult.add(e);
+    	}
+    }
+
+ * </pre>
+ * 
  */
 public class Certificate {
     private HashMap<String, String> _attributes = new HashMap<String, String>();
