@@ -31,9 +31,10 @@ public class NodeListener implements DiscoveryListener {
 		// Don't add ourselves
 		//
 		String myHost = aHostDetails.getHostName();
+        InetAddress myAddr = null;
 
 		try {
-			InetAddress myAddr = InetAddress.getByName(myHost);
+			myAddr = InetAddress.getByName(myHost);
 
 			if ((NetworkUtils.isLocalInterface(myAddr)) && (_port == aHostDetails.getPort())) {				
 				_logger.warn("Dumping our own address from view");
@@ -57,7 +58,10 @@ public class NodeListener implements DiscoveryListener {
 			myHostsZone.add(myHostsMib);
 
 			HashSet myDetails = new HashSet();
-			myDetails.add(aHostDetails);
+
+            // Make sure any hostname is replaced with an address
+            //
+			myDetails.add(new HostDetails(myAddr.getHostAddress(), aHostDetails.getPort()));
 			
 			myHostsMib.setIssued(0);  // Make sure we replace this immediately with updates
 			myHostsMib.setContacts(myDetails);
