@@ -101,7 +101,7 @@ public class MibAggregator {
         //
         if (aValue instanceof Script) {
             Script myMergeScript = (Script) aValue;
-            String myOrigin = myMergeScript.getAttribute(Script.CERT_ORIGIN);
+            String myOrigin = myMergeScript.getAttribute(Script.SCRIPT_ORIGIN);
             Zone myCurrent = aZone;
 
             do {

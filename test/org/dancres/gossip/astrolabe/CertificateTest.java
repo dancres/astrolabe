@@ -32,7 +32,7 @@ public class CertificateTest {
         _quoteScript = new StringBuffer();
         _quoteScript.append("&var1\n");
         _quoteScript.append("\"\"");
-}
+    }
 
     @Test public void checkRead() throws IOException {
         ByteArrayInputStream myBuffer = new ByteArrayInputStream(_validScript.toString().getBytes());

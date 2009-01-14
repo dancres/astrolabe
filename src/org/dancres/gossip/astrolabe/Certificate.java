@@ -61,7 +61,7 @@ import java.util.Map;
  * 
  */
 public class Certificate {
-    private static final String ATTRIBUTE_PREDICATE = "&";
+    public static final String ATTRIBUTE_PREDICATE = "&";
 
     private HashMap<String, String> _attributes = new HashMap<String, String>();
 

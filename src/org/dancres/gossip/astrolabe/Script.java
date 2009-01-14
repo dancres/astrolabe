@@ -23,10 +23,10 @@ import java.io.Reader;
 public class Script {
     public static final String SCRIPT_NAME_PREDICATE = "&";
 
-    public static final String CERT_NAME = SCRIPT_NAME_PREDICATE + "name";
-    public static final String CERT_SCRIPT = SCRIPT_NAME_PREDICATE + "code";
-    public static final String CERT_ORIGIN = SCRIPT_NAME_PREDICATE + "originzone";
-    public static final String CERT_COPY = SCRIPT_NAME_PREDICATE + "copy";
+    public static final String SCRIPT_NAME = Certificate.ATTRIBUTE_PREDICATE + "name";
+    public static final String SCRIPT_CODE = Certificate.ATTRIBUTE_PREDICATE + "code";
+    public static final String SCRIPT_ORIGIN = Certificate.ATTRIBUTE_PREDICATE + "originzone";
+    public static final String SCRIPT_COPY = Certificate.ATTRIBUTE_PREDICATE + "copy";
 
 	private transient Interpreter _interp;
 	private transient AggregationFunction _func;
@@ -40,7 +40,7 @@ public class Script {
 	}
 	
 	public String getName() {
-		return SCRIPT_NAME_PREDICATE + _cert.getValue(CERT_NAME);
+		return SCRIPT_NAME_PREDICATE + _cert.getValue(SCRIPT_NAME);
 	}
 	
 	public void evaluate(Collection<Mib> aSetOfMibs, Mib aTarget) throws Exception {
@@ -48,7 +48,7 @@ public class Script {
 			_interp = new Interpreter();
 			
 			_interp.eval("import org.dancres.gossip.astrolabe.*;");
-			_interp.eval(_cert.getValue(CERT_SCRIPT));
+			_interp.eval(_cert.getValue(SCRIPT_CODE));
 			
 			_func =  (AggregationFunction) _interp.eval("return (AggregationFunction) this");
 		}
@@ -65,7 +65,7 @@ public class Script {
     }
 
     public boolean canCopy() {
-        String myCopyFlag = _cert.getValue(CERT_COPY);
+        String myCopyFlag = _cert.getValue(SCRIPT_COPY);
 
         if ((myCopyFlag != null) && (Boolean.parseBoolean(myCopyFlag))) {
             return true;
