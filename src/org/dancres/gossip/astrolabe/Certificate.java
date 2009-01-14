@@ -61,6 +61,8 @@ import java.util.Map;
  * 
  */
 public class Certificate {
+    private static final String ATTRIBUTE_PREDICATE = "&";
+
     private HashMap<String, String> _attributes = new HashMap<String, String>();
 
     public Certificate(HashMap<String, String> anAttrs) {
@@ -104,7 +106,7 @@ public class Certificate {
                 continue;
             }
 
-            if (myLine.startsWith("&")) {
+            if (myLine.startsWith(ATTRIBUTE_PREDICATE)) {
                 if (myValueState) {
                     // End of previous value - and the start of another
                     myAttrs.put(myVarName, replaceEmpty(myValueBuffer.toString()));
@@ -125,7 +127,7 @@ public class Certificate {
                 else
                     myValueBuffer.append(" " + myLine);
             } else {
-                if (myLine.startsWith("&")) {
+                if (myLine.startsWith(ATTRIBUTE_PREDICATE)) {
                     myVarName = myLine.trim();
                     myValueBuffer = new StringBuffer();
                     myValueState = true;
@@ -149,7 +151,7 @@ public class Certificate {
     }
 
     public String toString() {
-        StringBuffer myBuffer = new StringBuffer("Certificate -> ");
+        StringBuffer myBuffer = new StringBuffer("[Certificate] <");
 
         Iterator<String> myKeys = _attributes.keySet().iterator();
         while (myKeys.hasNext()) {
@@ -157,6 +159,6 @@ public class Certificate {
             myBuffer.append(myKey + ": " + _attributes.get(myKey) + ", ");
         }
 
-        return myBuffer.toString();
+        return myBuffer.append(">").toString();
     }
 }
