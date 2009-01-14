@@ -46,10 +46,10 @@ public class AggregationProcess {
             while (myAttrNames.hasNext()) {
                 String myAttrName = myAttrNames.next();
                 if (myAttrName.startsWith(Script.SCRIPT_NAME_PREDICATE)) {
-                    _logger.info("Found script: " + myAttrName);
+                    _logger.debug("Found script: " + myAttrName);
                     Script myScript = (Script) myCurrentAttrs.get(myAttrName);
                     if (myScript.canCopy()) {
-                        _logger.info("Copying script: " + myAttrName);
+                        _logger.debug("Copying script: " + myAttrName);
                         myScripts.put(myAttrName, ((Script) myCurrentAttrs.get(myAttrName)).dup());
                     }
                 }
@@ -61,9 +61,9 @@ public class AggregationProcess {
         while (myScriptNames.hasNext()) {
             String myScriptName = myScriptNames.next();
 
-            _logger.info("Possible candidate: " + myScriptName);
+            _logger.debug("Possible candidate: " + myScriptName);
             if (! mySysMib.getAttributes().containsKey(myScriptName)) {
-                _logger.info("Inserting candidate: " + myScriptName);
+                _logger.debug("Inserting candidate: " + myScriptName);
                 mySysMib.getAttributes().put(myScriptName, myScripts.get(myScriptName));
             }
         }
