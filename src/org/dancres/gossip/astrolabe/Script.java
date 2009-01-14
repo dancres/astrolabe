@@ -21,9 +21,12 @@ import java.io.Reader;
  * and the associated code.</p>
  */
 public class Script {
-    public static final String CERT_NAME = "&name";
-    public static final String CERT_SCRIPT = "&code";
-    public static final String CERT_ORIGIN = "&originzone";
+    public static final String SCRIPT_NAME_PREDICATE = "&";
+
+    public static final String CERT_NAME = SCRIPT_NAME_PREDICATE + "name";
+    public static final String CERT_SCRIPT = SCRIPT_NAME_PREDICATE + "code";
+    public static final String CERT_ORIGIN = SCRIPT_NAME_PREDICATE + "originzone";
+    public static final String CERT_COPY = SCRIPT_NAME_PREDICATE + "copy";
 
 	private transient Interpreter _interp;
 	private transient AggregationFunction _func;
@@ -37,7 +40,7 @@ public class Script {
 	}
 	
 	public String getName() {
-		return "&" + _cert.getValue(CERT_NAME);
+		return SCRIPT_NAME_PREDICATE + _cert.getValue(CERT_NAME);
 	}
 	
 	public void evaluate(Collection<Mib> aSetOfMibs, Mib aTarget) throws Exception {
@@ -59,6 +62,16 @@ public class Script {
 
     public String getAttribute(String aField) {
         return _cert.getValue(aField);
+    }
+
+    public boolean canCopy() {
+        String myCopyFlag = _cert.getValue(CERT_COPY);
+
+        if ((myCopyFlag != null) && (Boolean.parseBoolean(myCopyFlag))) {
+            return true;
+        }
+
+        return false;
     }
 	
 	private String concat(Collection<String> aStrings) {

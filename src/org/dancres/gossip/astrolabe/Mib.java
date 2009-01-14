@@ -152,8 +152,7 @@ public class Mib implements Exportable {
 	}
 	
 	/**
-	 * Use this method to gain access to the Mib's attributes for purposes of live modification.  Use
-	 * <code>exportAttributes</code> to obtain a copy of the Mib's attributes suitable for transfer between VM's.
+	 * Use this method to gain access to the Mib's attributes for purposes of live modification.
 	 * @return the live attributes
 	 */
 	public Map<String, Object> getAttributes() {

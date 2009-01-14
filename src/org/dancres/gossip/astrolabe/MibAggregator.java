@@ -27,7 +27,7 @@ public class MibAggregator {
 	
 	public void run() {
 		/*
-		 * Get all child zones, scan the mibs for attributes beginning with "&" (indicating a script).
+		 * Get all child zones, scan the mibs for attributes beginning with SCRIPT_NAME_PREDICATE (indicating a script).
 		 * Take each discovered script and apply it to the Mibs of the child zones, storing the results in the
 		 * Mib of _zone.
 		 */
@@ -52,7 +52,7 @@ public class MibAggregator {
 				String myKey = myKeys.next();
 				_logger.debug("Checking: " + myZone.getName() + " Mib key: " + myKey);
 				
-				if (myKey.startsWith("&")) {
+				if (myKey.startsWith(Script.SCRIPT_NAME_PREDICATE)) {
 					myScriptMap.put(myKey, (Script) myAttrMap.get(myKey));
 					_logger.debug("Keeping: " + myKey);
 				}

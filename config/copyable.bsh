@@ -1,0 +1,12 @@
+&name
+Promiscuous
+&originzone
+""
+&copy
+true
+&code
+import org.dancres.gossip.astrolabe.*;
+aggregate( Script anEnclosing, Collection aMibs, Mib aTarget ) {
+  if (aTarget.getAttributes().get(anEnclosing.getName()) == null)
+    aTarget.getAttributes().put(anEnclosing.getName(), anEnclosing.dup());
+}

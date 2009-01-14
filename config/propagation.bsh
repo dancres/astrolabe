@@ -1,0 +1,15 @@
+source("config/init.bsh");
+source("config/dump.bsh");
+Main.publishAdvert();
+
+file = new FileInputStream("config/copyable.bsh");
+scr = Script.create(file);
+file.close();
+sys = Zones.getRoot().find(LocalID.get()).get("system");
+print(sys.getId());
+sys.getMib().getAttributes().put(scr.getName(), scr);
+new GossipProcess(Main._service).run();
+
+
+new AggregationProcess().run();
+
