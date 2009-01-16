@@ -62,100 +62,103 @@ import org.slf4j.LoggerFactory;
  * {@link GossipServlet} for more details.
  */
 public class ZoneGossiper {
+
     private static Logger _logger = LoggerFactory.getLogger(ZoneGossiper.class);
-	
-	private Service _service;
-	private Zone _zone;
-	private Random _random = new Random();
-	private HostDetails _contactDetails;
-	
-	public ZoneGossiper(Zone aZone, Service aService) throws IOException {
-		_zone = aZone;
-		_service = aService;
-    	_contactDetails = _service.getContactDetails();
-	}
-	
-	/**
-	 * @todo Fix up the random zone selection - could currently take a while if we got unlucky with the RNG results.
-	 */
-	public void run() {
-		_logger.info("Looking to gossip about: " + _zone.getId() + "(" + _zone.getName() + ")");
-		
-		ArrayList<Zone> myChildZones = new ArrayList<Zone>(_zone.getChildren());
-		
-		// If there's only one child, it must be ours as we gossip along the self-chain and so no gossiping required
-		//
-		if (myChildZones.size() == 1) {
-			_logger.info("Not going to gossip about (only child): " + _zone.getId() + "(" + _zone.getName() + ")");
-			return;
-		}
-		
-		Zone myChosen = null;
-		
-		// Pick some zone at random, that isn't ours
-		//
-		do {
-			myChosen = myChildZones.get(_random.nextInt(myChildZones.size()));
-		} while (myChosen.isSelf());
-		
-		// Pick a random contact
-		//
-		ArrayList myContacts = new ArrayList(myChosen.getMib().getContacts());
-		HostDetails myContact = (HostDetails) myContacts.get(_random.nextInt(myContacts.size()));
-		
-		// Assemble relevant MIB details
-		//
-		Set<MibSummary> mySummaries = _zone.getMibSummaries();
-		HttpResponse myResponse = null;
-		Reader myReader = null;	        	
-		HttpPost myPostMethod = null;
-		URL myURL = null;
-		
-		try {
-			// Hit the gossip endpoint, includes the zone we're gossiping on behalf of
-			// 
-			myURL = new URL("http://" + myContact.getHostName() + ":"
-					+ myContact.getPort() + _service.getRoot(GossipServlet.PATH) + _zone.getId() + "?" +
-					GossipServlet.ASTROLABE_HOST + "=" + _contactDetails.getHostName() + "&" + 
-					GossipServlet.ASTROLABE_PORT + "=" + _contactDetails.getPort());
+    private Service _service;
+    private Zone _zone;
+    private Random _random = new Random();
+    private HostDetails _contactDetails;
 
-			_logger.info("Connecting for gossip with: " + myURL);
-			
-			myPostMethod = new HttpPost(myURL.toString());			
-			MibSummaryCodec myCodec = new MibSummaryCodec();
-			ByteArrayOutputStream myBuffer = new ByteArrayOutputStream();
-			Writer myWriter = new OutputStreamWriter(myBuffer);
-			myCodec.putSummary(mySummaries, myWriter);
-			myWriter.close();
+    public ZoneGossiper(Zone aZone, Service aService) throws IOException {
+        _zone = aZone;
+        _service = aService;
+        _contactDetails = _service.getContactDetails();
+    }
 
-			ByteArrayEntity myEntity = new ByteArrayEntity(myBuffer.toByteArray());
-			myEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "java/app"));
-			myPostMethod.setEntity(myEntity);
+    public void run() {
+        _logger.info("Looking to gossip about: " + _zone.getId() + "(" + _zone.getName() + ")");
 
-			myResponse = _service.getClient().execute(myPostMethod);
-			if (myResponse.getStatusLine().getStatusCode() != 200) {
-				myPostMethod.abort();
-				throw new IOException("Failed to post Mib summary: " + myResponse.getStatusLine());
-			}
+        ArrayList<Zone> myChildZones = new ArrayList<Zone>(_zone.getChildren());
 
-			/*
-			 *  Need to process response which will be another set of mib summaries. 
-			 */
-			HttpEntity entity = myResponse.getEntity();
+        // If there's only one child, it must be ours as we gossip along the self-chain and so no gossiping required
+        //
+        if (myChildZones.size() == 1) {
+            _logger.info("Not going to gossip about (only child): " + _zone.getId() + "(" + _zone.getName() + ")");
+            return;
+        }
 
-			if (entity != null) {
-				myReader = new InputStreamReader(entity.getContent());
-				mySummaries = myCodec.getSummary(myReader);
-				myReader.close();
-				
-				MibDownloader.pull(myContact, mySummaries, _service);
-			} else {
-				_logger.warn("Didn't get a response back - might be bad");
-			}
-		} catch (Exception anE) {
-			_logger.warn("Failed to gossip summary: " + myURL, anE);
-			if (myResponse != null)
-				myPostMethod.abort();
-		}
-	}
+        Zone myChosen = null;
+
+        // Pick some zone at random, that isn't ours
+        //
+        Iterator<Zone> myZones = myChildZones.iterator();
+        while (myZones.hasNext()) {
+            Zone myZone = myZones.next();
+            if (myZone.isSelf()) {
+                myZones.remove();
+                break;
+            }
+        }
+        myChosen = myChildZones.get(_random.nextInt(myChildZones.size()));
+
+        // Pick a random contact
+        //
+        ArrayList myContacts = new ArrayList(myChosen.getMib().getContacts());
+        HostDetails myContact = (HostDetails) myContacts.get(_random.nextInt(myContacts.size()));
+
+        // Assemble relevant MIB details
+        //
+        Set<MibSummary> mySummaries = _zone.getMibSummaries();
+        HttpResponse myResponse = null;
+        Reader myReader = null;
+        HttpPost myPostMethod = null;
+        URL myURL = null;
+
+        try {
+            // Hit the gossip endpoint, includes the zone we're gossiping on behalf of
+            //
+            myURL = new URL("http://" + myContact.getHostName() + ":" + myContact.getPort() + _service.getRoot(GossipServlet.PATH) + _zone.getId() + "?" +
+                    GossipServlet.ASTROLABE_HOST + "=" + _contactDetails.getHostName() + "&" +
+                    GossipServlet.ASTROLABE_PORT + "=" + _contactDetails.getPort());
+
+            _logger.info("Connecting for gossip with: " + myURL);
+
+            myPostMethod = new HttpPost(myURL.toString());
+            MibSummaryCodec myCodec = new MibSummaryCodec();
+            ByteArrayOutputStream myBuffer = new ByteArrayOutputStream();
+            Writer myWriter = new OutputStreamWriter(myBuffer);
+            myCodec.putSummary(mySummaries, myWriter);
+            myWriter.close();
+
+            ByteArrayEntity myEntity = new ByteArrayEntity(myBuffer.toByteArray());
+            myEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "java/app"));
+            myPostMethod.setEntity(myEntity);
+
+            myResponse = _service.getClient().execute(myPostMethod);
+            if (myResponse.getStatusLine().getStatusCode() != 200) {
+                myPostMethod.abort();
+                throw new IOException("Failed to post Mib summary: " + myResponse.getStatusLine());
+            }
+
+            /*
+             *  Need to process response which will be another set of mib summaries.
+             */
+            HttpEntity entity = myResponse.getEntity();
+
+            if (entity != null) {
+                myReader = new InputStreamReader(entity.getContent());
+                mySummaries = myCodec.getSummary(myReader);
+                myReader.close();
+
+                MibDownloader.pull(myContact, mySummaries, _service);
+            } else {
+                _logger.warn("Didn't get a response back - might be bad");
+            }
+        } catch (Exception anE) {
+            _logger.warn("Failed to gossip summary: " + myURL, anE);
+            if (myResponse != null) {
+                myPostMethod.abort();
+            }
+        }
+    }
 }
