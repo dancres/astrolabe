@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bsh.Interpreter;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Startup class for the astrolabe implementation.
@@ -29,23 +31,26 @@ public class Main {
 	public static Service _service;
 	
 	/**
-	 * @param anArgs a list of peer id or peer id and seed url
-	 * 
-	 * @todo Add seeding logic
+	 * @param anArgs a list of peer id or peer id and seed specification which is <code>[\/zone]*\/host:address:port</code>
 	 */
 	public static void main(String[] anArgs) throws Exception {
 		String myId = null;
-		String mySeed = null;
+		LinkedList<SeedDetails> mySeedDetails = new LinkedList<SeedDetails>();
 		
 		if (anArgs.length == 1) {
 			myId = anArgs[0];
 			
-		} else if (anArgs.length == 2) {
+		} else if (anArgs.length > 1) {
 			myId = anArgs[0];
-			mySeed = anArgs[1];
-			
+
+            for (int i = 1; i < anArgs.length; i++) {
+                int mySep = anArgs[i].indexOf(":");
+                String mySeedId = anArgs[i].substring(0, mySep);
+                
+                mySeedDetails.add(new SeedDetails(mySeedId, HostDetails.parse(anArgs[i].substring(mySep + 1))));
+            }
 		} else {
-			System.err.println("Usage: <peerId> | <peerId> <seed URL>");
+			System.err.println("Usage: <peerId> | <peerId> <seed URL>*");
 			return;
 		}
 		
@@ -91,7 +96,12 @@ public class Main {
 		myRoot.add(myMachineZone);		
     	
 		Zones.setRoot(myRoot);
-		
+
+        Iterator<SeedDetails> mySeeds = mySeedDetails.iterator();
+        while (mySeeds.hasNext()) {
+            Zones.addHost(mySeeds.next());
+        }
+
     	if (isInteractive()) {
     		// Basics are now setup, start the shell and leave everything else to the user
     		//
@@ -110,7 +120,7 @@ public class Main {
     		*/
     	}
 	}
-	
+
 	static boolean isInteractive() {
 		return (System.getProperty(INTERACTIVE_PROP) != null);
 	}
@@ -119,7 +129,7 @@ public class Main {
 		Properties myProps = new Properties();
 		myProps.put(NodeListener.ADVERT_ID_FIELD, LocalID.get());
 	
-    	RegistrarFactory.getRegistrar().sample(TYPE, new NodeListener(Zones.getRoot(), _service.getPort()));
+    	RegistrarFactory.getRegistrar().sample(TYPE, new NodeListener(_service.getPort()));
     	RegistrarFactory.getRegistrar().register(TYPE, NetworkUtils.getWorkableInterface(), 
     			_service.getPort(), myProps);	    	
 	}

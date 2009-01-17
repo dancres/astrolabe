@@ -10,6 +10,22 @@ public class HostDetails {
 	public HostDetails() {		
 	}
 	
+    /**
+     * 
+     * @param aSpec a host port specification separated by a ":"
+     */
+    public static HostDetails parse(String aSpec) throws IllegalArgumentException {
+        int mySep = aSpec.indexOf(":");
+
+        if (mySep == -1)
+            throw new IllegalArgumentException("Missing : in spec: " + aSpec);
+
+        String myHost = aSpec.substring(0, mySep);
+        int myPort = Integer.parseInt(aSpec.substring(mySep + 1));
+
+        return new HostDetails(myHost, myPort);
+    }
+
 	public HostDetails(String aHostName, int aPort) {
 		this(aHostName, aPort, new Properties());
 	}
