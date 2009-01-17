@@ -51,7 +51,6 @@
     	<pathelement location="${otherlib}/jmdns-2.0/lib/jmdns.jar"/>
     	<pathelement location="${otherlib}/jackson-asl-0.9.3.jar"/>
     	<pathelement location="${otherlib}/junit-4.5.jar"/>
-    	<pathelement location="${otherlib}/groovy-all-1.5.7.jar"/>
     	<pathelement location="${otherlib}/bsh-1.3.0.jar"/>
     	<pathelement location="${otherlib}/gson-1.2.3.jar"/>
     </path>
