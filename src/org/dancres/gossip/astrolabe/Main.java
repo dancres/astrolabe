@@ -111,8 +111,11 @@ public class Main {
     		
     		publishAdvert();
     		
-    		Thread myGossiper = new Thread(new Gossiper(_service));
+    		Thread myGossiper = new Thread(new Gossiper(_service, 30000));
     		myGossiper.start();
+
+            Thread myCuller = new Thread(new Culler(60000));
+            myCuller.start();
 
     		/*
     		  Thread myDumper = new MibDumper();
