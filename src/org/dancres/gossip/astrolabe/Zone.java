@@ -29,8 +29,6 @@ import org.slf4j.LoggerFactory;
  * This precedence applies when exposing a set of attributes to aggregate against.  Because we cannot declare any
  * particular Mib the most up-to-date (other than at the representative that generated it) we must maintain multiple
  * Mibs per Zone.</p>
- * 
- * @todo Cull Mibs that aren't our own and haven't been updated in some reasonable period of time.
  */
 public class Zone {
 	private static Logger _logger = LoggerFactory.getLogger(Zone.class);
