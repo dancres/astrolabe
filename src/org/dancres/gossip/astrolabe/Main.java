@@ -31,11 +31,11 @@ public class Main {
 	public static Service _service;
 	
 	/**
-	 * @param anArgs a list of peer id or peer id and seed specification which is <code>[\/zone]*\/host:address:port</code>
+	 * @param anArgs a list of peer id or peer id and seed specification which is <code>[host:port]*</code>
 	 */
 	public static void main(String[] anArgs) throws Exception {
 		String myId = null;
-		LinkedList<SeedDetails> mySeedDetails = new LinkedList<SeedDetails>();
+		LinkedList<HostDetails> mySeedDetails = new LinkedList<HostDetails>();
 		
 		if (anArgs.length == 1) {
 			myId = anArgs[0];
@@ -44,13 +44,10 @@ public class Main {
 			myId = anArgs[0];
 
             for (int i = 1; i < anArgs.length; i++) {
-                int mySep = anArgs[i].indexOf(":");
-                String mySeedId = anArgs[i].substring(0, mySep);
-                
-                mySeedDetails.add(new SeedDetails(mySeedId, HostDetails.parse(anArgs[i].substring(mySep + 1))));
+                mySeedDetails.add(HostDetails.parse(anArgs[i]));
             }
 		} else {
-			System.err.println("Usage: <peerId> | <peerId> <seed URL>*");
+			System.err.println("Usage: <peerId> | <peerId> [<seed URL>]*");
 			return;
 		}
 		
@@ -97,9 +94,13 @@ public class Main {
     	
 		Zones.setRoot(myRoot);
 
-        Iterator<SeedDetails> mySeeds = mySeedDetails.iterator();
+        Iterator<HostDetails> mySeeds = mySeedDetails.iterator();
         while (mySeeds.hasNext()) {
-            Zones.addHost(mySeeds.next());
+            try {
+                Zones.addHost(SeedDetails.discover(_service, mySeeds.next()));
+            } catch (IOException anIOE) {
+                // Discard, already reported and nothing to be done for this host
+            }
         }
 
     	if (isInteractive()) {
@@ -132,7 +133,7 @@ public class Main {
 		Properties myProps = new Properties();
 		myProps.put(NodeListener.ADVERT_ID_FIELD, LocalID.get());
 	
-    	RegistrarFactory.getRegistrar().sample(TYPE, new NodeListener(_service.getPort()));
+    	RegistrarFactory.getRegistrar().sample(TYPE, new NodeListener(_service, _service.getPort()));
     	RegistrarFactory.getRegistrar().register(TYPE, NetworkUtils.getWorkableInterface(), 
     			_service.getPort(), myProps);	    	
 	}

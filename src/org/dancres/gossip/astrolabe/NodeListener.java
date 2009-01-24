@@ -6,6 +6,7 @@ import java.util.HashSet;
 import org.dancres.gossip.discovery.DiscoveryListener;
 import org.dancres.gossip.discovery.HostDetails;
 import org.dancres.gossip.net.NetworkUtils;
+import org.dancres.gossip.net.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +19,10 @@ public class NodeListener implements DiscoveryListener {
 	private static Logger _logger = LoggerFactory.getLogger(NodeListener.class);
 
 	private int _port;
+    private Service _service;
 
-	NodeListener(int aPort) {
+	NodeListener(Service aService, int aPort) {
+        _service = aService;
 		_port = aPort;
 	}
 
@@ -50,6 +53,8 @@ public class NodeListener implements DiscoveryListener {
 
             _logger.info("Adding new host: " + myAddr.getHostAddress() + ":" + aHostDetails.getPort());
 
+            if (myHostsId == null)
+                Zones.addHost(SeedDetails.discover(_service, new HostDetails(myAddr.getHostAddress(), aHostDetails.getPort())));
             Zones.addHost(new SeedDetails(myHostsId, new HostDetails(myAddr.getHostAddress(), aHostDetails.getPort())));
         } catch (Exception anE) {
             _logger.warn("Couldn't check host details (ignoring): " + aHostDetails, anE);

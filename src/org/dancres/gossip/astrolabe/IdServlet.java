@@ -31,6 +31,7 @@ public class IdServlet extends HttpServlet {
 
 		Writer myWriter = aResp.getWriter();
 		myWriter.write(LocalID.get());
+        myWriter.write("\n");
 		
 		aResp.setStatus(HttpServletResponse.SC_OK);		
 	}
