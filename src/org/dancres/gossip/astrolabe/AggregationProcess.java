@@ -40,8 +40,8 @@ public class AggregationProcess {
         Mib mySysMib = mySys.getMib();
 
         do {
-            Map<String, Object> myCurrentAttrs = myCurrent.getMib().getAttributes();
-            Iterator<String> myAttrNames = myCurrentAttrs.keySet().iterator();
+            Attributes myCurrentAttrs = myCurrent.getMib().getAttributes();
+            Iterator<String> myAttrNames = myCurrentAttrs.getKeys();
 
             while (myAttrNames.hasNext()) {
                 String myAttrName = myAttrNames.next();

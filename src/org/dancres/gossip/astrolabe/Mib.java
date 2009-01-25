@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Collections;
 import java.util.HashMap;
@@ -142,8 +143,8 @@ public class Mib implements Exportable {
 	 * Use this method to gain access to the Mib's attributes for purposes of live modification.
 	 * @return the live attributes
 	 */
-	public Map<String, Object> getAttributes() {
-		return _attributes;
+	public Attributes getAttributes() {
+		return new AttributeFilter(_attributes);
 	}
 	
 	public void export(Writer aWriter) throws IOException {
@@ -154,4 +155,32 @@ public class Mib implements Exportable {
 		
 		myUtils.writeMap(myAttrs);
 	}
+
+    private static class AttributeFilter implements Attributes {
+        private ConcurrentHashMap _attributes;
+
+        AttributeFilter(ConcurrentHashMap anAttributes) {
+            _attributes = anAttributes;
+        }
+
+        public Object get(String aKey) {
+            return _attributes.get(aKey);
+        }
+
+        public void put(String aKey, Object anObject) {
+            _attributes.put(aKey, anObject);
+        }
+
+        public Iterator<String> getKeys() {
+            return _attributes.keySet().iterator();
+        }
+
+        public boolean containsKey(String aValue) {
+            return _attributes.containsKey(aValue);
+        }
+
+        public String toString() {
+            return _attributes.toString();
+        }
+    }
 }

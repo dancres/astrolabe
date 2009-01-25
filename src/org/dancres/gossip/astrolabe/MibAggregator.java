@@ -45,8 +45,8 @@ public class MibAggregator {
 			Mib myZoneMib = myZone.getMib();
 			myMibList.add(myZoneMib);
 			
-			Map<String, Object> myAttrMap = myZoneMib.getAttributes();
-			Iterator<String> myKeys = myAttrMap.keySet().iterator();
+			Attributes myAttrMap = myZoneMib.getAttributes();
+			Iterator<String> myKeys = myAttrMap.getKeys();
 			
 			while (myKeys.hasNext()) {
 				String myKey = myKeys.next();
@@ -77,7 +77,7 @@ public class MibAggregator {
                 Mib myZoneMib = _zone.getMib();
                 Mib myTempMib = myZoneMib.dup();
 				myScript.evaluate(myMibList, myTempMib);
-                Iterator<String> myAttrKeys = myTempMib.getAttributes().keySet().iterator();
+                Iterator<String> myAttrKeys = myTempMib.getAttributes().getKeys();
 
                 while (myAttrKeys.hasNext()) {
                     String myKey = myAttrKeys.next();
