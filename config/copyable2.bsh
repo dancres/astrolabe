@@ -7,7 +7,7 @@ true
 &level
 weak
 &issued
-1
+2
 &code
 import org.dancres.gossip.astrolabe.*;
 aggregate( Script anEnclosing, Collection aMibs, Mib aTarget ) {

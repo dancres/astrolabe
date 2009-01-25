@@ -1,5 +1,9 @@
 &name
 default
+&level
+weak
+&issued
+1
 &originzone
 ""
 &code
