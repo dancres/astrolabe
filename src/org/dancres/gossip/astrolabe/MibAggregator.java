@@ -52,7 +52,7 @@ public class MibAggregator {
 				String myKey = myKeys.next();
 				_logger.debug("Checking: " + myZone.getName() + " Mib key: " + myKey);
 				
-				if (myKey.startsWith(Script.SCRIPT_NAME_PREDICATE)) {
+				if (myKey.startsWith(Script.NAME_PREDICATE)) {
 					myScriptMap.put(myKey, (Script) myAttrMap.get(myKey));
 					_logger.debug("Keeping: " + myKey);
 				}
@@ -101,7 +101,7 @@ public class MibAggregator {
         //
         if (aValue instanceof Script) {
             Script myMergeScript = (Script) aValue;
-            String myOrigin = myMergeScript.getAttribute(Script.SCRIPT_ORIGIN);
+            String myOrigin = myMergeScript.getAttribute(Script.ORIGIN);
             Zone myCurrent = aZone;
 
             do {

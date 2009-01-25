@@ -19,18 +19,16 @@ import java.io.Reader;
  *
  * <p>A script is a kind of certificate - at minimum it must contain two attributes &name and &code representing it's name
  * and the associated code.</p>
- *
- * @todo Remove SCRIPT predicate from public static final's
  */
 public class Script {
-    public static final String SCRIPT_NAME_PREDICATE = "&";
+    public static final String NAME_PREDICATE = "&";
 
-    public static final String SCRIPT_NAME = Certificate.ATTRIBUTE_PREDICATE + "name";
-    public static final String SCRIPT_CODE = Certificate.ATTRIBUTE_PREDICATE + "code";
-    public static final String SCRIPT_ORIGIN = Certificate.ATTRIBUTE_PREDICATE + "originzone";
-    public static final String SCRIPT_COPY = Certificate.ATTRIBUTE_PREDICATE + "copy";
-    public static final String SCRIPT_LEVEL = Certificate.ATTRIBUTE_PREDICATE + "level";
-    public static final String SCRIPT_ISSUED = Certificate.ATTRIBUTE_PREDICATE + "issued";
+    public static final String NAME = Certificate.ATTRIBUTE_PREDICATE + "name";
+    public static final String CODE = Certificate.ATTRIBUTE_PREDICATE + "code";
+    public static final String ORIGIN = Certificate.ATTRIBUTE_PREDICATE + "originzone";
+    public static final String COPY = Certificate.ATTRIBUTE_PREDICATE + "copy";
+    public static final String LEVEL = Certificate.ATTRIBUTE_PREDICATE + "level";
+    public static final String ISSUED = Certificate.ATTRIBUTE_PREDICATE + "issued";
 
     public static final String STRONG = "strong";
     public static final String WEAK = "weak";
@@ -47,7 +45,7 @@ public class Script {
 	}
 	
 	public String getName() {
-		return SCRIPT_NAME_PREDICATE + _cert.getValue(SCRIPT_NAME);
+		return NAME_PREDICATE + _cert.getValue(NAME);
 	}
 	
 	public void evaluate(Collection<Mib> aSetOfMibs, Mib aTarget) throws Exception {
@@ -55,7 +53,7 @@ public class Script {
 			_interp = new Interpreter();
 			
 			_interp.eval("import org.dancres.gossip.astrolabe.*;");
-			_interp.eval(_cert.getValue(SCRIPT_CODE));
+			_interp.eval(_cert.getValue(CODE));
 			
 			_func =  (AggregationFunction) _interp.eval("return (AggregationFunction) this");
 		}
@@ -72,7 +70,7 @@ public class Script {
     }
 
     public boolean canCopy() {
-        String myCopyFlag = _cert.getValue(SCRIPT_COPY);
+        String myCopyFlag = _cert.getValue(COPY);
 
         if ((myCopyFlag != null) && (Boolean.parseBoolean(myCopyFlag))) {
             return true;
@@ -109,9 +107,9 @@ public class Script {
      * — x and y are both valid, x is not stronger than y , and x.issued > y.issued
      */
     public boolean isPreferable(Script anotherScript) {
-        if (getAttribute(Script.SCRIPT_LEVEL).equals(Script.STRONG)) {
-            String myScriptZone = getAttribute(Script.SCRIPT_ORIGIN);
-            String myOtherScriptZone = anotherScript.getAttribute(Script.SCRIPT_ORIGIN);
+        if (getAttribute(Script.LEVEL).equals(Script.STRONG)) {
+            String myScriptZone = getAttribute(Script.ORIGIN);
+            String myOtherScriptZone = anotherScript.getAttribute(Script.ORIGIN);
 
             // Must deduce parent/child relationship via path as actual Zone may not be present at this point
             //
@@ -119,10 +117,10 @@ public class Script {
                 return true;
             }
         } else {
-            boolean myFirstIsStrong = getAttribute(Script.SCRIPT_LEVEL).equals(Script.STRONG);
-            boolean myOtherIsWeak = (anotherScript.getAttribute(Script.SCRIPT_LEVEL).equals(Script.WEAK));
-            long myFirstIssued = Long.parseLong(getAttribute(Script.SCRIPT_ISSUED));
-            long myOtherIssued = Long.parseLong(anotherScript.getAttribute(Script.SCRIPT_ISSUED));
+            boolean myFirstIsStrong = getAttribute(Script.LEVEL).equals(Script.STRONG);
+            boolean myOtherIsWeak = (anotherScript.getAttribute(Script.LEVEL).equals(Script.WEAK));
+            long myFirstIssued = Long.parseLong(getAttribute(Script.ISSUED));
+            long myOtherIssued = Long.parseLong(anotherScript.getAttribute(Script.ISSUED));
 
             if ((!(myFirstIsStrong && myOtherIsWeak)) && (myFirstIssued > myOtherIssued)) {
                 return true;

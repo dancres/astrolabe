@@ -30,7 +30,7 @@ public class ScriptTest {
 
         Assert.assertTrue(myScript.canCopy() == true);
         Assert.assertTrue(myScript.getName().equals("&Promiscuous"));
-        Assert.assertTrue(myScript.getAttribute(Script.SCRIPT_CODE).length() != 0);
-        Assert.assertTrue(myScript.getAttribute(Script.SCRIPT_ORIGIN).length() == 0);
+        Assert.assertTrue(myScript.getAttribute(Script.CODE).length() != 0);
+        Assert.assertTrue(myScript.getAttribute(Script.ORIGIN).length() == 0);
     }
 }

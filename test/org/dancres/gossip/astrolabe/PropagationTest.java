@@ -96,7 +96,7 @@ public class PropagationTest {
         _rootMib.getAttributes().put(_first.getName(), _second);
         new AggregationProcess().run();
 
-        long myIssued = Long.parseLong(((Script) _sysMib.getAttributes().get(_second.getName())).getAttribute(Script.SCRIPT_ISSUED));
+        long myIssued = Long.parseLong(((Script) _sysMib.getAttributes().get(_second.getName())).getAttribute(Script.ISSUED));
 
         Assert.assertTrue(myIssued == 2);
     }

@@ -43,7 +43,7 @@ public class AggregationProcess {
             while (myAttrNames.hasNext()) {
                 String myAttrName = myAttrNames.next();
 
-                if (myAttrName.startsWith(Script.SCRIPT_NAME_PREDICATE)) {
+                if (myAttrName.startsWith(Script.NAME_PREDICATE)) {
                     _logger.debug("Found script: " + myAttrName);
                     Script myScript = (Script) myCurrentAttrs.get(myAttrName);
 
