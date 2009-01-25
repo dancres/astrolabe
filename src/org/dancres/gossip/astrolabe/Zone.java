@@ -400,7 +400,7 @@ public class Zone {
      * A zone is dead if it has no child zones and all it's Mibs are expired
      * 
      * @param anExpiryTime the time after which a Mib must have been updated to be declared live
-     * @return
+     * @return whether the zone is dead in respect of the specified time.
      */
     public boolean isDead(long anExpiryTime) {
         if (isSelf())
