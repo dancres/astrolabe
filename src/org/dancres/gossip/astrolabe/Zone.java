@@ -277,6 +277,9 @@ public class Zone {
 		String myRemainder;
 		
 		if (getId() == ROOT) {
+            if (aPath.equals(ROOT))
+                return this;
+
 			myRemainder = aPath;
 		} else {
 			if (! aPath.startsWith(getId()))
@@ -391,6 +394,17 @@ public class Zone {
 	public boolean isSelf() {
 		return _isSelf;
 	}
+
+    public boolean isChildOf(String aParentId) {
+        Zone myCurrent = getParent();
+
+        while (myCurrent != null) {
+            if (myCurrent.getId().equals(aParentId))
+                return true;
+        }
+
+        return false;
+    }
 	
 	public String toString() {
 		return "Zone: " + _id;
