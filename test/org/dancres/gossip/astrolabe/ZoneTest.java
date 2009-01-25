@@ -43,6 +43,11 @@ public class ZoneTest {
 		// dumpTree(_Root, "");		
 	}
 
+    @Test public void rootFindRoot() {
+        Zone myZone = _Root.find("");
+        Assert.assertTrue(myZone.getId().equals(_Root.getId()));
+    }
+
 	@Test public void rootFind() {
 		Zone myZone = _Root.find(_Second.getId());
 		Assert.assertTrue(myZone.getId().equals(_Second.getId()));
