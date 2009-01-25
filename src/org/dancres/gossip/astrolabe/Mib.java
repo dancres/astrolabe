@@ -38,10 +38,6 @@ public class Mib implements Exportable {
 	
 	private ConcurrentHashMap _attributes;
 
-	/**
-	 * @deprecated
-	 */
-	private Zone _owner;
 	private long _touched;
 	
 	/**
@@ -67,23 +63,14 @@ public class Mib implements Exportable {
 		_attributes = new ConcurrentHashMap(myAttrs);
 	}
 
-    private Mib(Zone anOwner, long aTouched, ConcurrentHashMap anAttributes) {
-        _owner = anOwner;
+    private Mib(long aTouched, ConcurrentHashMap anAttributes) {
         _touched = aTouched;
         _attributes = anAttributes;
     }
 
     public Mib dup() {
-        return new Mib(_owner, _touched, new ConcurrentHashMap(_attributes));
+        return new Mib(_touched, new ConcurrentHashMap(_attributes));
     }
-
-	/**
-	 * @deprecated
-	 * @param anOwner
-	 */
-	public void setZone(Zone anOwner) {
-		_owner = anOwner;
-	}
 
 	public void setIssued(long anIssued) {
 		_attributes.put(ISSUED_ATTR, new Long(anIssued));

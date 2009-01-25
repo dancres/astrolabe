@@ -89,9 +89,7 @@ public class Zone {
 				return;
 			}
 
-			aMib.setTouched(System.currentTimeMillis());
-			aMib.setZone(this);
-			
+			aMib.setTouched(System.currentTimeMillis());			
 			_mibs.put(aMib.getRepresentative(), aMib);
 		}
 	}
