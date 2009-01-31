@@ -3,7 +3,7 @@ package org.dancres.gossip.astrolabe;
 import java.util.Set;
 import org.dancres.gossip.io.Exportable;
 
-public interface IMib extends Exportable {
+public interface Mib extends Exportable {
     public MibImpl dup();
 
 	public void setIssued(long anIssued);

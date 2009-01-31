@@ -48,7 +48,7 @@ public class Script {
 		return NAME_PREDICATE + _cert.getValue(NAME);
 	}
 	
-	public void evaluate(Collection<IMib> aSetOfMibs, IMib aTarget) throws Exception {
+	public void evaluate(Collection<Mib> aSetOfMibs, Mib aTarget) throws Exception {
 		if (_interp == null) {
 			_interp = new Interpreter();
 			

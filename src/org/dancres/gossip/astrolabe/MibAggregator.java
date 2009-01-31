@@ -30,7 +30,7 @@ public class MibAggregator {
          */
 
         HashMap<String, Script> myScriptMap = new HashMap<String, Script>();
-        Collection<IMib> myMibList = new ArrayList<IMib>();
+        Collection<Mib> myMibList = new ArrayList<Mib>();
         Collection<Zone> myZoneList = _zone.getChildren();
         Iterator<Zone> myZones = myZoneList.iterator();
 
@@ -39,7 +39,7 @@ public class MibAggregator {
 
             _logger.debug("Examining: " + _zone + " -> " + myZone);
 
-            IMib myZoneMib = myZone.getMib();
+            Mib myZoneMib = myZone.getMib();
             myMibList.add(myZoneMib);
 
             Attributes myAttrMap = myZoneMib.getAttributes();
@@ -85,8 +85,8 @@ public class MibAggregator {
                  * attribute propogation.  Thus we clone the Mib, pass it in for updating and merge the results back to the clone's
                  * donor.
                  */
-                IMib myZoneMib = _zone.getMib();
-                IMib myTempMib = myZoneMib.dup();
+                Mib myZoneMib = _zone.getMib();
+                Mib myTempMib = myZoneMib.dup();
                 myScript.evaluate(myMibList, myTempMib);
                 Iterator<String> myAttrKeys = myTempMib.getAttributes().getKeys();
 

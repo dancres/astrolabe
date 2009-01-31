@@ -30,7 +30,7 @@ import com.google.gson.Gson;
  * One may also store scripts as attributes.  In such a case, the name of the attribute must start with <code>&</code>
  * and the value should be a {@link Script} object.
  */
-public class MibImpl implements IMib {
+public class MibImpl implements Mib {
 	private static final String ISSUED_ATTR = "issued";
 	private static final String REPRESENTATIVE_ATTR = "representative";
 	private static final String NMEMBERS_ATTR = "nmembers";

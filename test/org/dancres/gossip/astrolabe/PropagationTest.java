@@ -12,8 +12,8 @@ public class PropagationTest {
     private Script _third;
     private Script _fourth;
 
-    private IMib _sysMib;
-    private IMib _rootMib;
+    private Mib _sysMib;
+    private Mib _rootMib;
 
     @Before public void init() throws Exception {
         String myId = "/org/dancres/dredd1";
