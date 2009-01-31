@@ -30,7 +30,7 @@ import com.google.gson.Gson;
  * One may also store scripts as attributes.  In such a case, the name of the attribute must start with <code>&</code>
  * and the value should be a {@link Script} object.
  */
-public class Mib implements Exportable {
+public class MibImpl implements IMib {
 	private static final String ISSUED_ATTR = "issued";
 	private static final String REPRESENTATIVE_ATTR = "representative";
 	private static final String NMEMBERS_ATTR = "nmembers";
@@ -44,7 +44,7 @@ public class Mib implements Exportable {
 	/**
 	 * @param aRepresentative is the issuer (<code>LocalID.get()</code>) of the Mib.
 	 */
-	public Mib(String aRepresentative) {
+	public MibImpl(String aRepresentative) {
 		_attributes = new ConcurrentHashMap();
 		
 		setIssued(0);
@@ -54,7 +54,7 @@ public class Mib implements Exportable {
 		setServers(new HashSet<HostDetails>());
 	}
 	
-	public Mib(Reader aReader) throws IOException {
+	public MibImpl(Reader aReader) throws IOException {
 		Gson myGson = new Gson();
 		BufferedReader myReader = new BufferedReader(aReader);
 		GsonUtils myUtils = new GsonUtils(myGson, myReader);
@@ -64,13 +64,13 @@ public class Mib implements Exportable {
 		_attributes = new ConcurrentHashMap(myAttrs);
 	}
 
-    private Mib(long aTouched, ConcurrentHashMap anAttributes) {
+    private MibImpl(long aTouched, ConcurrentHashMap anAttributes) {
         _touched = aTouched;
         _attributes = anAttributes;
     }
 
-    public Mib dup() {
-        return new Mib(_touched, new ConcurrentHashMap(_attributes));
+    public MibImpl dup() {
+        return new MibImpl(_touched, new ConcurrentHashMap(_attributes));
     }
 
 	public void setIssued(long anIssued) {

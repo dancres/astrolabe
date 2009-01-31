@@ -11,5 +11,5 @@ public interface AggregationFunction {
 	 * @param aListOfMibs is a list of Mibs to aggregate
 	 * @param aTarget is the Mib to put the aggregation in
 	 */
-	public void aggregate(Script aScript, Collection<Mib> aListOfMibs, Mib aTarget);
+	public void aggregate(Script aScript, Collection<IMib> aListOfMibs, IMib aTarget);
 }

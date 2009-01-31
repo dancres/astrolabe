@@ -34,7 +34,7 @@ public class AggregationProcess {
          * and copy them down into our system zone if the copy flag is set.
          */
         myCurrentZone = Zones.getRoot().find(LocalID.get());
-        Mib mySysMib = mySys.getMib();
+        IMib mySysMib = mySys.getMib();
 
         do {
             Attributes myCurrentAttrs = myCurrentZone.getMib().getAttributes();

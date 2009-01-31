@@ -12,8 +12,8 @@ public class PropagationTest {
     private Script _third;
     private Script _fourth;
 
-    private Mib _sysMib;
-    private Mib _rootMib;
+    private IMib _sysMib;
+    private IMib _rootMib;
 
     @Before public void init() throws Exception {
         String myId = "/org/dancres/dredd1";
@@ -26,21 +26,21 @@ public class PropagationTest {
 
 		Zone myRoot = new Zone();
 
-		_rootMib = new Mib(myId);
+		_rootMib = new MibImpl(myId);
 		myRoot.add(_rootMib);
 		_rootMib.setIssued(0);
 		_rootMib.setNMembers(0);
 
 		Zone myMachineZone = new Zone(myId);
 
-		Mib myMib = new Mib(myId);
+		MibImpl myMib = new MibImpl(myId);
 		myMachineZone.add(myMib);
 		myMib.setIssued(System.currentTimeMillis());
 		myMib.setNMembers(1);
 
 		Zone mySystemZone = new Zone(myId + "/" + Zone.SYSTEM);
 
-		_sysMib = new Mib(myId);
+		_sysMib = new MibImpl(myId);
 		mySystemZone.add(_sysMib);
 		_sysMib.setIssued(System.currentTimeMillis());
 		_sysMib.setNMembers(1);

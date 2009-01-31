@@ -50,7 +50,7 @@ public class MibServlet extends HttpServlet {
 		
 		// Request for a specific representative's version of the MIB?
 		//
-		Mib myMib = null;
+		IMib myMib = null;
 		
 		if (aReq.getQueryString() == null) 
 			myMib = myZone.getMib();

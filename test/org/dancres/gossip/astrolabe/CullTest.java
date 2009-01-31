@@ -26,26 +26,26 @@ public class CullTest {
 
         // Add does a setTouched, thus we must override it after the add() to get what we want
         //
-        Mib myMib = new Mib("/dancresl/rhubarb");
+        MibImpl myMib = new MibImpl("/dancresl/rhubarb");
         _root.add(myMib);
         myMib.setTouched(myTimeInTheFuture);
 
-        myMib = new Mib("/dancresr/custard");
+        myMib = new MibImpl("/dancresr/custard");
         _right.add(myMib);
         myMib.setTouched(System.currentTimeMillis() + (8 * 1000));
 
-        myMib = new Mib("/dancresl/rhubarb");
+        myMib = new MibImpl("/dancresl/rhubarb");
         _left.add(myMib);
         myMib.setTouched(myTimeInTheFuture);
 
-        myMib = new Mib("/dancresr/deadcustard");
+        myMib = new MibImpl("/dancresr/deadcustard");
         _rightChild.add(myMib);
 
         // Mib should die on the first cull in the test
         //
         myMib.setTouched(1);
 
-        myMib = new Mib("/dancresr/soontobedeadcustard");
+        myMib = new MibImpl("/dancresr/soontobedeadcustard");
         _rightChild.add(myMib);
 
         // Mib should die on the second cull in the test
