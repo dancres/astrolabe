@@ -13,6 +13,10 @@ import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Collection of utilities for performing discovery of network interfaces and addresses that are suitable
+ * for use with Gossip protocols.  In particular we require support for multicast.
+ */
 public class NetworkUtils {
     private static Logger _logger = LoggerFactory.getLogger(NetworkUtils.class);
 

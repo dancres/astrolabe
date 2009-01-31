@@ -28,6 +28,10 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Handles http-related aspects - clients create an instance for a specified URL root
+ * and register <code>Servlets</code> to support various requests.
+ */
 public class Service {
     private static Logger _logger = LoggerFactory.getLogger(Service.class);
 	
