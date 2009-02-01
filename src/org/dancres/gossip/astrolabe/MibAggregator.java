@@ -80,24 +80,8 @@ public class MibAggregator {
             try {
                 _logger.debug("Evaluating: " + myScriptName);
 
-                /*
-                 * We don't want scripts directly updating the Mib attributes of the zone.  This is because we have to control/limit
-                 * attribute propogation.  Thus we clone the Mib, pass it in for updating and merge the results back to the clone's
-                 * donor.
-                 */
                 Mib myZoneMib = _zone.getMib();
-                Mib myTempMib = myZoneMib.dup();
-                myScript.evaluate(myMibList, myTempMib);
-                Iterator<String> myAttrKeys = myTempMib.getAttributes().getKeys();
-
-                while (myAttrKeys.hasNext()) {
-                    String myKey = myAttrKeys.next();
-                    Object myValue = myTempMib.getAttributes().get(myKey);
-
-                    if (canPropogate(_zone, myKey, myValue)) {
-                        myZoneMib.getAttributes().put(myKey, myValue);
-                    }
-                }
+                myScript.evaluate(myMibList, myZoneMib);
             } catch (Exception anE) {
                 _logger.warn("Failed to evaluate script: " + myScriptName, anE);
             }
@@ -106,26 +90,5 @@ public class MibAggregator {
         if (_zone.getMib().getIssued() == myIssued) {
             _zone.getMib().setIssued(System.currentTimeMillis());
         }
-    }
-
-    private boolean canPropogate(Zone aZone, String aKey, Object aValue) {
-        // Only propogate a script if it's origin zone matches this Zone or a parent of this Zone
-        //
-        if (aValue instanceof Script) {
-            Script myMergeScript = (Script) aValue;
-            String myOrigin = myMergeScript.getAttribute(Script.ORIGIN);
-            Zone myCurrent = aZone;
-
-            do {
-                if (myOrigin.equals(myCurrent.getId())) {
-                    return true;
-                }
-                myCurrent = myCurrent.getParent();
-            } while (myCurrent != null);
-
-            return false;
-        }
-
-        return true;
     }
 }

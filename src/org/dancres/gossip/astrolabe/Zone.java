@@ -45,6 +45,8 @@ public class Zone {
 	
 	private boolean _isSelf;
 	private Zone _parent;
+
+    private EventQueue _queue = new EventQueue();
 	
 	/**
 	 * Create the a root Zone.
@@ -78,6 +80,10 @@ public class Zone {
 		//
 		_isSelf = (LocalID.get().startsWith(anId));
 	}
+
+    public EventQueue getQueue() {
+        return _queue;
+    }
 
     public Mib newMib(String aRepresentative) {
         return new MibImpl(this, aRepresentative);
@@ -226,11 +232,16 @@ public class Zone {
      *
      * @param anExpiryPeriod the period (backwards from the point at which this method is called) within which an update
      * must have been received for a Mib to remain valid (and unculled).
+     *
+     * @todo Cull internal event queue
      */
     public void cull(long anExpiryPeriod) {
         internalCull(System.currentTimeMillis() - anExpiryPeriod);
     }
 
+    /**
+     * @todo Generate zone removal event
+     */
     private void internalCull(long aDeadTime) {
         /*
          * Note:  We do this in a fashion that can lead to a race condition where we decide to remove a Zone just as a
@@ -348,7 +359,7 @@ public class Zone {
 			//
 			String myChildZone = aPath.substring(1);
 			aZone.setParent(this);
-			_children.put(myChildZone, aZone);
+			addChild(myChildZone, aZone);
 			
 			return;			
 		} else {
@@ -373,13 +384,20 @@ public class Zone {
 				myMib.setNMembers(aZone.getMib().getNMembers());
 				myMib.setIssued(0);  // Set this to zero so we replace it immediately with updates
 				
-				_children.put(myChildZone, myChild);
+				addChild(myChildZone, myChild);
 			}
 			
 			myChild.relativeAdd(aPath.substring(myNextSep), aZone);
 		}
 	}
 	
+    /**
+     * @todo Generate an event for the new child
+     */
+    private void addChild(String aName, Zone aChild) {
+        _children.put(aName, aChild);
+    }
+
 	private void setParent(Zone aZone) {
 		if (_id.equals(ROOT))
 			throw new IllegalArgumentException("Root Zone cannot have a root");

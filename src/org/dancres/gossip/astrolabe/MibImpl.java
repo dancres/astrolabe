@@ -31,13 +31,6 @@ import com.google.gson.Gson;
  * and the value should be a {@link Script} object.
  */
 public class MibImpl implements Mib {
-	private static final String ISSUED_ATTR = "issued";
-	private static final String REPRESENTATIVE_ATTR = "representative";
-    private static final String ZONE_ATTR = "zone";
-	private static final String NMEMBERS_ATTR = "nmembers";
-	private static final String CONTACTS_ATTR = "contacts";
-	private static final String SERVERS_ATTR = "servers";
-	
 	private ConcurrentHashMap _attributes;
 
 	private long _touched;
@@ -155,6 +148,7 @@ public class MibImpl implements Mib {
 	
 	/**
 	 * Use this method to gain access to the Mib's attributes for purposes of live modification.
+     *
 	 * @return the live attributes
 	 */
 	public Attributes getAttributes() {
@@ -170,7 +164,7 @@ public class MibImpl implements Mib {
 		myUtils.writeMap(myAttrs);
 	}
 
-    private static class AttributeFilter implements Attributes {
+    private class AttributeFilter implements Attributes {
         private ConcurrentHashMap _attributes;
 
         AttributeFilter(ConcurrentHashMap anAttributes) {
@@ -181,8 +175,33 @@ public class MibImpl implements Mib {
             return _attributes.get(aKey);
         }
 
+        /**
+         * @todo Generate an event
+         */
         public void put(String aKey, Object anObject) {
-            _attributes.put(aKey, anObject);
+            if ((aKey.equals(ZONE_ATTR)) || (aKey.equals(REPRESENTATIVE_ATTR)))
+                throw new IllegalArgumentException("Cannot change the zone id");
+
+            // Only propogate a script if it's origin zone matches this Zone or a parent of this Zone
+            //
+            if (anObject instanceof Script) {
+                Script myMergeScript = (Script) anObject;
+                String myOrigin = myMergeScript.getAttribute(Script.ORIGIN);
+                Zone myCurrent = Zones.getRoot().find(getZoneId());
+
+                do {
+                    if (myOrigin.equals(myCurrent.getId())) {
+                        _attributes.put(aKey, anObject);
+                        break;
+                    }
+
+                    myCurrent = myCurrent.getParent();
+                } while (myCurrent != null);
+
+                return;
+            } else {
+                _attributes.put(aKey, anObject);
+            }
         }
 
         public Iterator<String> getKeys() {
