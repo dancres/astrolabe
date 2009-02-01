@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 public class MibImpl implements Mib {
 	private static final String ISSUED_ATTR = "issued";
 	private static final String REPRESENTATIVE_ATTR = "representative";
+    private static final String ZONE_ATTR = "zone";
 	private static final String NMEMBERS_ATTR = "nmembers";
 	private static final String CONTACTS_ATTR = "contacts";
 	private static final String SERVERS_ATTR = "servers";
@@ -44,9 +45,10 @@ public class MibImpl implements Mib {
 	/**
 	 * @param aRepresentative is the issuer (<code>LocalID.get()</code>) of the Mib.
 	 */
-	public MibImpl(String aRepresentative) {
+	public MibImpl(Zone aZone, String aRepresentative) {
 		_attributes = new ConcurrentHashMap();
-		
+
+        setZone(aZone.getId());
 		setIssued(0);
 		setRepresentative(aRepresentative);
 		setNMembers(0);		
@@ -80,7 +82,15 @@ public class MibImpl implements Mib {
 	public long getIssued() {
 		return ((Long) _attributes.get(ISSUED_ATTR)).longValue();
 	}
-	
+
+    private void setZone(String anId) {
+        _attributes.put(ZONE_ATTR, anId);
+    }
+
+    public String getZoneId() {
+        return (String) _attributes.get(ZONE_ATTR);
+    }
+
 	private void setRepresentative(String aRep) {
 		_attributes.put(REPRESENTATIVE_ATTR, aRep);
 	}

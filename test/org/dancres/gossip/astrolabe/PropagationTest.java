@@ -26,21 +26,21 @@ public class PropagationTest {
 
 		Zone myRoot = new Zone();
 
-		_rootMib = new MibImpl(myId);
+		_rootMib = new MibImpl(myRoot, myId);
 		myRoot.add(_rootMib);
 		_rootMib.setIssued(0);
 		_rootMib.setNMembers(0);
 
 		Zone myMachineZone = new Zone(myId);
 
-		MibImpl myMib = new MibImpl(myId);
+		MibImpl myMib = new MibImpl(myMachineZone, myId);
 		myMachineZone.add(myMib);
 		myMib.setIssued(System.currentTimeMillis());
 		myMib.setNMembers(1);
 
 		Zone mySystemZone = new Zone(myId + "/" + Zone.SYSTEM);
 
-		_sysMib = new MibImpl(myId);
+		_sysMib = new MibImpl(mySystemZone, myId);
 		mySystemZone.add(_sysMib);
 		_sysMib.setIssued(System.currentTimeMillis());
 		_sysMib.setNMembers(1);

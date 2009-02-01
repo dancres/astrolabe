@@ -68,21 +68,21 @@ public class Main {
     	
 		Zone myRoot = new Zone();
 		
-		MibImpl myMib = new MibImpl(myId);
+		MibImpl myMib = new MibImpl(myRoot, myId);
 		myRoot.add(myMib);
 		myMib.setIssued(0);
 		myMib.setNMembers(0);
 		
 		Zone myMachineZone = new Zone(myId);
 		
-		myMib = new MibImpl(myId);
+		myMib = new MibImpl(myMachineZone, myId);
 		myMachineZone.add(myMib);
 		myMib.setIssued(System.currentTimeMillis());
 		myMib.setNMembers(1);
 		
 		Zone mySystemZone = new Zone(myId + "/" + Zone.SYSTEM);
 
-		myMib = new MibImpl(myId);
+		myMib = new MibImpl(mySystemZone, myId);
 		mySystemZone.add(myMib);
 		myMib.setIssued(System.currentTimeMillis());
 		myMib.setNMembers(1);
