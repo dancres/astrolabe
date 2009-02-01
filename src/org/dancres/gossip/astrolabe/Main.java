@@ -58,6 +58,7 @@ public class Main {
 		_service.add(new IdServlet(), IdServlet.MOUNT_POINT);
 		_service.add(new MibServlet(), MibServlet.MOUNT_POINT);
 		_service.add(new GossipServlet(_service), GossipServlet.MOUNT_POINT);
+        _service.add(new EventServlet(), EventServlet.MOUNT_POINT);
 
     	_logger.info("Doing local advert as: " + TYPE + " : " + NetworkUtils.getWorkableInterface() + " : " +
     			_service.getPort());
@@ -67,20 +68,19 @@ public class Main {
     	myContactsSet.add(myContactDetails);
     	
 		Zone myRoot = new Zone();
+		Zones.setRoot(myRoot);
 		
 		Mib myMib = myRoot.newMib(myId);
 		myRoot.add(myMib);
-		myMib.setIssued(0);
-		myMib.setNMembers(0);
 		
 		Zone myMachineZone = new Zone(myId);
-		
+        myRoot.add(myMachineZone);
+
 		myMib = myMachineZone.newMib(myId);
 		myMachineZone.add(myMib);
-		myMib.setIssued(System.currentTimeMillis());
-		myMib.setNMembers(1);
 		
 		Zone mySystemZone = new Zone(myId + "/" + Zone.SYSTEM);
+        myMachineZone.add(mySystemZone);
 
 		myMib = mySystemZone.newMib(myId);
 		mySystemZone.add(myMib);
@@ -88,12 +88,7 @@ public class Main {
 		myMib.setNMembers(1);
 		myMib.setContacts(myContactsSet);
 		myMib.setServers(myContactsSet);		
-		
-		myMachineZone.add(mySystemZone);
-		myRoot.add(myMachineZone);		
-    	
-		Zones.setRoot(myRoot);
-
+		    	
         Iterator<HostDetails> mySeeds = mySeedDetails.iterator();
         while (mySeeds.hasNext()) {
             try {

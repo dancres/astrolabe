@@ -28,29 +28,19 @@ public class PropagationTest {
 
 		_rootMib = myRoot.newMib(myId);
 		myRoot.add(_rootMib);
-		_rootMib.setIssued(0);
-		_rootMib.setNMembers(0);
 
 		Zone myMachineZone = new Zone(myId);
 
 		Mib myMib = myMachineZone.newMib(myId);
 		myMachineZone.add(myMib);
-		myMib.setIssued(System.currentTimeMillis());
-		myMib.setNMembers(1);
 
 		Zone mySystemZone = new Zone(myId + "/" + Zone.SYSTEM);
 
 		_sysMib = mySystemZone.newMib(myId);
 		mySystemZone.add(_sysMib);
-		_sysMib.setIssued(System.currentTimeMillis());
-		_sysMib.setNMembers(1);
-		_sysMib.setContacts(myContactsSet);
-		_sysMib.setServers(myContactsSet);
 
 		myMachineZone.add(mySystemZone);
 		myRoot.add(myMachineZone);
-
-		Zones.setRoot(myRoot);
 
         FileInputStream myStream = new FileInputStream("/Users/dan/src/gossip/config/copyable.bsh");
 

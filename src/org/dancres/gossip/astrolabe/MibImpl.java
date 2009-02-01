@@ -16,6 +16,8 @@ import org.dancres.gossip.discovery.HostDetails;
 import org.dancres.gossip.io.Exportable;
 
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Holds attributes for a {@link Zone}.  Standard attributes are:
@@ -31,6 +33,8 @@ import com.google.gson.Gson;
  * and the value should be a {@link Script} object.
  */
 public class MibImpl implements Mib {
+    private static Logger _logger = LoggerFactory.getLogger(MibImpl.class);
+
 	private ConcurrentHashMap _attributes;
 
 	private long _touched;
@@ -46,11 +50,11 @@ public class MibImpl implements Mib {
 		_attributes = new ConcurrentHashMap();
 
         setZone(aZone.getId());
-		setIssued(0);
 		setRepresentative(aRepresentative);
-		setNMembers(0);		
-		setContacts(new HashSet<HostDetails>());
-		setServers(new HashSet<HostDetails>());
+		_attributes.put(ISSUED_ATTR, new Long(0));
+		_attributes.put(NMEMBERS_ATTR, new Long(0));
+	    _attributes.put(CONTACTS_ATTR, new HashSet<HostDetails>());
+		_attributes.put(SERVERS_ATTR, new HashSet<HostDetails>());
 	}
 	
 	public MibImpl(Reader aReader) throws IOException {
@@ -72,14 +76,6 @@ public class MibImpl implements Mib {
         return new MibImpl(_touched, new ConcurrentHashMap(_attributes));
     }
 
-	public void setIssued(long anIssued) {
-		_attributes.put(ISSUED_ATTR, new Long(anIssued));
-	}
-
-	public long getIssued() {
-		return ((Long) _attributes.get(ISSUED_ATTR)).longValue();
-	}
-
     private void setZone(String anId) {
         _attributes.put(ZONE_ATTR, anId);
     }
@@ -95,9 +91,17 @@ public class MibImpl implements Mib {
 	public String getRepresentative() {
 		return (String) _attributes.get(REPRESENTATIVE_ATTR);
 	}
-	
+
+	public void setIssued(long anIssued) {
+		getAttributes().put(ISSUED_ATTR, new Long(anIssued));
+	}
+
+	public long getIssued() {
+		return ((Long) _attributes.get(ISSUED_ATTR)).longValue();
+	}
+
 	public void setContacts(Set aContacts) {
-		_attributes.put(CONTACTS_ATTR, aContacts);				
+		getAttributes().put(CONTACTS_ATTR, aContacts);
 	}
 	
 	/**
@@ -108,7 +112,7 @@ public class MibImpl implements Mib {
 	}
 
 	public void setServers(Set aContacts) {
-		_attributes.put(SERVERS_ATTR, aContacts);				
+		getAttributes().put(SERVERS_ATTR, aContacts);
 	}
 	
 	/**
@@ -119,7 +123,7 @@ public class MibImpl implements Mib {
 	}
 
 	public void setNMembers(long aNumMembers) {
-		_attributes.put(NMEMBERS_ATTR, new Long(aNumMembers));
+		getAttributes().put(NMEMBERS_ATTR, new Long(aNumMembers));
 	}
 	
 	public long getNMembers() {
@@ -175,9 +179,6 @@ public class MibImpl implements Mib {
             return _attributes.get(aKey);
         }
 
-        /**
-         * @todo Generate an event
-         */
         public void put(String aKey, Object anObject) {
             if ((aKey.equals(ZONE_ATTR)) || (aKey.equals(REPRESENTATIVE_ATTR)))
                 throw new IllegalArgumentException("Cannot change the zone id");
@@ -202,6 +203,15 @@ public class MibImpl implements Mib {
             } else {
                 _attributes.put(aKey, anObject);
             }
+
+            // In normal processing the zone should always be found but during initialisation, things can get messy and
+            // we may not be able to generate the event
+            //
+            Zone myZone = Zones.getRoot().find(getZoneId());
+            if (myZone != null)
+                myZone.getQueue().add(new Event(Event.ATTR_TYPE, Event.ATTR_SET, getZoneId(), aKey));
+            else
+                _logger.debug("Couldn't send an event for: " + getZoneId(), new Exception());
         }
 
         public Iterator<String> getKeys() {

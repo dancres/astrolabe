@@ -59,6 +59,8 @@ public class Zone {
 		// Always belongs to "self"
 		//
 		_isSelf = true;
+
+        Zones.setRoot(this);
 	}
 		
 	/**
@@ -232,16 +234,12 @@ public class Zone {
      *
      * @param anExpiryPeriod the period (backwards from the point at which this method is called) within which an update
      * must have been received for a Mib to remain valid (and unculled).
-     *
-     * @todo Cull internal event queue
      */
     public void cull(long anExpiryPeriod) {
         internalCull(System.currentTimeMillis() - anExpiryPeriod);
+        _queue.cull();
     }
 
-    /**
-     * @todo Generate zone removal event
-     */
     private void internalCull(long aDeadTime) {
         /*
          * Note:  We do this in a fashion that can lead to a race condition where we decide to remove a Zone just as a
@@ -260,6 +258,7 @@ public class Zone {
 
             if (myZone.isDead(aDeadTime)) {
                 _children.remove(myZone.getName());
+                _queue.add(new Event(Event.ZONE_TYPE, Event.ZONE_REMOVE, _id, myZone.getName()));
             } else
                 myZone.internalCull(aDeadTime);
         }
@@ -370,20 +369,8 @@ public class Zone {
 				myChild = new Zone(getId() + "/" + myChildZone);
 				myChild.setParent(this);
 				
-				/*
-				 *  Any child we create is in a branch that is created to support the new zone we're adding
-				 *  which will already have a representative and contacts.  Given that the child hasn't previously
-				 *  existed until the arrival of this new zone, it makes sense to use it's rep, contact and other
-				 *  fields to fill in the new child.
-				 */
-				Mib myMib = myChild.newMib(aZone.getMib().getRepresentative());
+				Mib myMib = myChild.newMib(LocalID.get());
 				myChild.add(myMib);
-				
-				myMib.setContacts(new HashSet<HostDetails>(aZone.getMib().getContacts()));
-				myMib.setServers(new HashSet<HostDetails>(aZone.getMib().getServers()));
-				myMib.setNMembers(aZone.getMib().getNMembers());
-				myMib.setIssued(0);  // Set this to zero so we replace it immediately with updates
-				
 				addChild(myChildZone, myChild);
 			}
 			
@@ -391,11 +378,9 @@ public class Zone {
 		}
 	}
 	
-    /**
-     * @todo Generate an event for the new child
-     */
     private void addChild(String aName, Zone aChild) {
         _children.put(aName, aChild);
+        _queue.add(new Event(Event.ZONE_TYPE, Event.ZONE_ADD, _id, aName));
     }
 
 	private void setParent(Zone aZone) {
