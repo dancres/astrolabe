@@ -26,7 +26,7 @@ public class Zones {
          */
         if (myHostsZone == null) {
             myHostsZone = new Zone(aDetails.getId());
-            MibImpl myHostsMib = new MibImpl(myHostsZone, aDetails.getId());
+            Mib myHostsMib = myHostsZone.newMib(aDetails.getId());
             myHostsZone.add(myHostsMib);
 
             HashSet myDetails = new HashSet();

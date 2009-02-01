@@ -78,7 +78,11 @@ public class Zone {
 		//
 		_isSelf = (LocalID.get().startsWith(anId));
 	}
-	
+
+    public Mib newMib(String aRepresentative) {
+        return new MibImpl(this, aRepresentative);
+    }
+
 	public void add(Mib aMib) {
 		synchronized(_mibs) {
 			Mib myExisting = _mibs.get(aMib.getRepresentative());
@@ -361,7 +365,7 @@ public class Zone {
 				 *  existed until the arrival of this new zone, it makes sense to use it's rep, contact and other
 				 *  fields to fill in the new child.
 				 */
-				MibImpl myMib = new MibImpl(myChild, aZone.getMib().getRepresentative());
+				Mib myMib = myChild.newMib(aZone.getMib().getRepresentative());
 				myChild.add(myMib);
 				
 				myMib.setContacts(new HashSet<HostDetails>(aZone.getMib().getContacts()));

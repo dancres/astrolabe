@@ -43,6 +43,10 @@ public class MibImpl implements Mib {
 	private long _touched;
 	
 	/**
+     * Use <code>{@link Zone}.newMib()</code> to construct a Mib rather than this method as it reduces the risk of having
+     * mismatched zone id's across Zone and associated Mibs.
+     *
+     * @param aZone is the zone to which this Mib is attached
 	 * @param aRepresentative is the issuer (<code>LocalID.get()</code>) of the Mib.
 	 */
 	public MibImpl(Zone aZone, String aRepresentative) {
