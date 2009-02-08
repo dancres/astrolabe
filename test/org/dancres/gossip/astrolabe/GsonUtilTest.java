@@ -1,5 +1,6 @@
 package org.dancres.gossip.astrolabe;
 
+import org.dancres.gossip.io.GsonUtils;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

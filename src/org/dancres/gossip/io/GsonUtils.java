@@ -1,4 +1,4 @@
-package org.dancres.gossip.astrolabe;
+package org.dancres.gossip.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
