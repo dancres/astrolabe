@@ -91,8 +91,7 @@ public class GsonUtils {
 		try {
 			Map myMap = (Map) Class.forName(aPrimitiveType).newInstance();
 
-			String myInput = _reader.readLine();
-			long myMapSize = _gson.fromJson(myInput, Long.class);
+			long myMapSize = _gson.fromJson(_reader.readLine(), Long.class);
 
 			if (myMapSize == 0)
 				return myMap;
@@ -100,18 +99,15 @@ public class GsonUtils {
 			for (long i = 0; i < myMapSize; i++) {
 				// Read key-type
 				//
-				myInput = _reader.readLine();
-				String myKeyType = _gson.fromJson(myInput, String.class);
+				String myKeyType = _gson.fromJson(_reader.readLine(), String.class);
 
 				// Read key value
 				//
-				myInput = _reader.readLine();
-				Object myKey = _gson.fromJson(myInput, Class.forName(myKeyType));
+				Object myKey = _gson.fromJson(_reader.readLine(), Class.forName(myKeyType));
 
 				// Read value-type
 				//
-				myInput = _reader.readLine();
-				String myValueType = _gson.fromJson(myInput, String.class);
+				String myValueType = _gson.fromJson(_reader.readLine(), String.class);
 				Class myValueClazz = Class.forName(myValueType);
 
 				Object myValue;
@@ -119,8 +115,7 @@ public class GsonUtils {
 				if (Collection.class.isAssignableFrom(myValueClazz)) {
 					myValue = readCollection(myValueType);
 				} else {
-					myInput = _reader.readLine();
-					myValue = _gson.fromJson(myInput, myValueClazz);
+					myValue = _gson.fromJson(_reader.readLine(), myValueClazz);
 				}
 
 				myMap.put(myKey, myValue);
@@ -180,19 +175,16 @@ public class GsonUtils {
 		try {
 			Collection myCollection = (Collection) Class.forName(aPrimitiveType).newInstance();
 
-			String myInput = _reader.readLine();
-			long myCollectionSize = _gson.fromJson(myInput, Long.class);
+			long myCollectionSize = _gson.fromJson(_reader.readLine(), Long.class);
 
 			if (myCollectionSize == 0)
 				return myCollection;
 
-			myInput = _reader.readLine();
-			String myContentType = _gson.fromJson(myInput, String.class);
+			String myContentType = _gson.fromJson(_reader.readLine(), String.class);
 			Class myContentClazz = Class.forName(myContentType);
 
 			for (long i = 0; i < myCollectionSize; i++) {
-				myInput = _reader.readLine();
-				Object myValue = _gson.fromJson(myInput, myContentClazz);
+				Object myValue = _gson.fromJson(_reader.readLine(), myContentClazz);
 				myCollection.add(myValue);
 			}
 
