@@ -43,7 +43,7 @@ public class ZoneServlet extends HttpServlet {
 		Zone myZone = Zones.getRoot().find(myZoneId);
 
 		if (myZone == null) {
-			aResp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			aResp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 

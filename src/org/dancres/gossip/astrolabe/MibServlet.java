@@ -44,7 +44,7 @@ public class MibServlet extends HttpServlet {
 		
 		Zone myZone = Zones.getRoot().find(aReq.getPathInfo());
 		if (myZone == null) {
-			aResp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			aResp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 		
@@ -69,7 +69,7 @@ public class MibServlet extends HttpServlet {
 		// If the MIB isn't present
 		//
 		if (myMib == null) {
-			aResp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			aResp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;					
 		} else {
 			myMib.export(myWriter);
