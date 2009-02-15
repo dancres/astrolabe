@@ -59,6 +59,7 @@ public class Main {
 		_service.add(new MibServlet(), MibServlet.MOUNT_POINT);
 		_service.add(new GossipServlet(_service), GossipServlet.MOUNT_POINT);
         _service.add(new EventServlet(), EventServlet.MOUNT_POINT);
+        _service.add(new ZoneServlet(), ZoneServlet.MOUNT_POINT);
 
     	_logger.info("Doing local advert as: " + TYPE + " : " + NetworkUtils.getWorkableInterface() + " : " +
     			_service.getPort());
