@@ -1,4 +1,4 @@
-package org.dancres.gossip.astrolabe;
+package org.dancres.gossip.net;
 
 import java.util.HashMap;
 import java.util.Map;
