@@ -3,6 +3,9 @@ package org.dancres.gossip.astrolabe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Responsible for cleaning out expired resources (e.g. MIBs and EventQueues entries).
+ */
 public class Culler implements Runnable {
 	private static Logger _logger = LoggerFactory.getLogger(Culler.class);
 
