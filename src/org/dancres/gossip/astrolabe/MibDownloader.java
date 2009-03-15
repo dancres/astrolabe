@@ -72,6 +72,13 @@ public class MibDownloader {
 				
 				try {
 					mySummary = mySummaries.next();
+
+                    Zone myLocal = Zones.getRoot().find(mySummary.getId());
+
+                    if ((myLocal != null) && (myLocal.isSelf())) {
+                        _logger.info("Not going to pull a self zone: " + myLocal.getId());
+                        continue;
+                    }
 					
 					_logger.debug("Processing summary: " + mySummary);
 
