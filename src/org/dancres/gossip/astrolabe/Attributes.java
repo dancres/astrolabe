@@ -13,6 +13,9 @@ public interface Attributes {
     /**
      * Always generates an event for the attribute update
      *
+     * @param aKey is the name of the attribute
+     * @param anObject is the value to associate with the name
+     *
      * @throws IllegalArgumentException if an attempt is made to set the zone id or representative of a Mib
      */
     public void put(String aKey, Object anObject);
