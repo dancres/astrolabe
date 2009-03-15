@@ -60,7 +60,18 @@ public class Script {
 		
 		_func.aggregate(this, aSetOfMibs, aTarget);
 	}
-	
+
+    public boolean equals(Object anObject) {
+        if (anObject instanceof Script) {
+            Script myOther = (Script) anObject;
+
+            return (myOther.getName().equals(getName())) &&
+                    (Long.valueOf(myOther.getAttribute(ISSUED)).equals(Long.valueOf(getAttribute(ISSUED))));
+        }
+
+        return false;
+    }
+
 	public String toString() {
 		return _cert.toString();
 	}

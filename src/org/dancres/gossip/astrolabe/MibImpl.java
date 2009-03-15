@@ -180,9 +180,16 @@ public class MibImpl implements Mib {
             return _attributes.get(aKey);
         }
 
+        /**
+         * @todo Add detection of past object and equals() tests to generate events only on genuine change
+         */
         public void put(String aKey, Object anObject) {
             if ((aKey.equals(ZONE_ATTR)) || (aKey.equals(REPRESENTATIVE_ATTR)))
-                throw new IllegalArgumentException("Cannot change the zone id");
+                throw new IllegalArgumentException("Cannot change the zone id/rep");
+
+            // We compare the new value with the old to determine if something genuinely changed
+            //
+            Object myOld;
 
             // Only propogate a script if it's origin zone matches this Zone or a parent of this Zone
             //
@@ -193,7 +200,7 @@ public class MibImpl implements Mib {
 
                 do {
                     if (myOrigin.equals(myCurrent.getId())) {
-                        _attributes.put(aKey, anObject);
+                        myOld = _attributes.put(aKey, anObject);
                         break;
                     }
 
@@ -202,16 +209,21 @@ public class MibImpl implements Mib {
 
                 return;
             } else {
-                _attributes.put(aKey, anObject);
+                myOld = _attributes.put(aKey, anObject);
             }
 
             // In normal processing the zone should always be found but during initialisation, things can get messy and
             // we may not be able to generate the event
             //
             Zone myZone = Zones.getRoot().find(getZoneId());
-            if (myZone != null)
-                myZone.getQueue().add(new Event(Event.ATTR_TYPE, Event.ATTR_SET, getZoneId(), aKey));
-            else
+            if (myZone != null) {
+
+                // If there was no old object or the old and new objects are different, generate an event
+                //
+                if ((myOld == null) || (! myOld.equals(anObject))) {
+                    myZone.getQueue().add(new Event(Event.ATTR_TYPE, Event.ATTR_SET, getZoneId(), aKey));
+                }
+            } else
                 _logger.debug("Couldn't send an event for: " + getZoneId(), new Exception());
         }
 

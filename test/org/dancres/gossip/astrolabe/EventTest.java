@@ -18,6 +18,9 @@ public class EventTest {
         _root = new Zone();
         Mib myMib = _root.newMib("/dancresl/rhubarb");
         _root.add(myMib);
+
+        // Discard changes to root
+        //
         _root.getQueue().clear();
 
         _left = new Zone("/dancresl");
@@ -43,8 +46,16 @@ public class EventTest {
     }
 
     @Test public void checkQueue() throws IOException {
+        // Two children added to root
+        //
         Assert.assertTrue(_root.getQueue().getSize() == 2);
 
+        // Generate an attribute change event
+        //
+        _root.getMib().getAttributes().put("newKey", "aValue");
+        
+        // Event should be discarded, no change to attribute
+        //
         _root.getMib().getAttributes().put("newKey", "aValue");
 
         Assert.assertTrue(_root.getQueue().getSize() == 3);
