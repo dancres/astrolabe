@@ -76,7 +76,7 @@ public class MibDownloader {
                     Zone myLocal = Zones.getRoot().find(mySummary.getId());
 
                     if ((myLocal != null) && (myLocal.isSelf())) {
-                        _logger.info("Not going to pull a self zone: " + myLocal.getId());
+                        _logger.debug("Not going to pull a self zone: " + myLocal.getId());
                         continue;
                     }
 					
