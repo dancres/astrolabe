@@ -19,77 +19,76 @@ import java.util.LinkedList;
  * Startup class for the astrolabe implementation.
  */
 public class Main {
-	private static Logger _logger = LoggerFactory.getLogger(Main.class);
-	
-	private static final String ASTROLABE_ROOT = "/astrolabe";
-	private static final String TYPE = "_astrolabe._tcp";
-	private static final String INTERACTIVE_PROP = "interactive";
-	
-	/**
-	 * DO NOT REFERENCE THIS DIRECTLY - FOR USE IN BEANSHELL-BASED DEBUGGING ONLY
-	 */
-	public static Service _service;
-	
-	/**
-	 * @param anArgs a list of peer id or peer id and seed specification which is <code>[host:port]*</code>
-	 */
-	public static void main(String[] anArgs) throws Exception {
-		String myId = null;
-		LinkedList<HostDetails> mySeedDetails = new LinkedList<HostDetails>();
-		
-		if (anArgs.length == 1) {
-			myId = anArgs[0];
-			
-		} else if (anArgs.length > 1) {
-			myId = anArgs[0];
+
+    private static Logger _logger = LoggerFactory.getLogger(Main.class);
+    private static final String ASTROLABE_ROOT = "/astrolabe";
+    private static final String TYPE = "_astrolabe._tcp";
+    private static final String INTERACTIVE_PROP = "interactive";
+    /**
+     * DO NOT REFERENCE THIS DIRECTLY - FOR USE IN BEANSHELL-BASED DEBUGGING ONLY
+     */
+    public static Service _service;
+
+    /**
+     * @param anArgs a list of peer id or peer id and seed specification which is <code>[host:port]*</code>
+     */
+    public static void main(String[] anArgs) throws Exception {
+        String myId = null;
+        LinkedList<HostDetails> mySeedDetails = new LinkedList<HostDetails>();
+
+        if (anArgs.length == 1) {
+            myId = anArgs[0];
+
+        } else if (anArgs.length > 1) {
+            myId = anArgs[0];
 
             for (int i = 1; i < anArgs.length; i++) {
                 mySeedDetails.add(HostDetails.parse(anArgs[i]));
             }
-		} else {
-			System.err.println("Usage: <peerId> | <peerId> [<seed URL>]*");
-			return;
-		}
-		
-		LocalID.set(myId);
-		
-		_service = new Service(ASTROLABE_ROOT);
-		
-		_service.add(new IdServlet(), IdServlet.MOUNT_POINT);
-		_service.add(new MibServlet(), MibServlet.MOUNT_POINT);
-		_service.add(new GossipServlet(_service), GossipServlet.MOUNT_POINT);
+        } else {
+            System.err.println("Usage: <peerId> | <peerId> [<seed URL>]*");
+            return;
+        }
+
+        LocalID.set(myId);
+
+        _service = new Service(ASTROLABE_ROOT);
+
+        _service.add(new IdServlet(), IdServlet.MOUNT_POINT);
+        _service.add(new MibServlet(), MibServlet.MOUNT_POINT);
+        _service.add(new GossipServlet(_service), GossipServlet.MOUNT_POINT);
         _service.add(new EventServlet(), EventServlet.MOUNT_POINT);
         _service.add(new ZoneServlet(), ZoneServlet.MOUNT_POINT);
 
-    	_logger.info("Doing local advert as: " + TYPE + " : " + NetworkUtils.getWorkableInterface() + " : " +
-    			_service.getPort());
+        _logger.info("Doing local advert as: " + TYPE + " : " + NetworkUtils.getWorkableInterface() + " : " +
+                _service.getPort());
 
-    	HostDetails myContactDetails = _service.getContactDetails();
-    	HashSet<HostDetails> myContactsSet = new HashSet<HostDetails>();
-    	myContactsSet.add(myContactDetails);
-    	
-		Zone myRoot = new Zone();
-		Zones.setRoot(myRoot);
-		
-		Mib myMib = myRoot.newMib(myId);
-		myRoot.add(myMib);
-		
-		Zone myMachineZone = new Zone(myId);
+        HostDetails myContactDetails = _service.getContactDetails();
+        HashSet<HostDetails> myContactsSet = new HashSet<HostDetails>();
+        myContactsSet.add(myContactDetails);
+
+        Zone myRoot = new Zone();
+        Zones.setRoot(myRoot);
+
+        Mib myMib = myRoot.newMib(myId);
+        myRoot.add(myMib);
+
+        Zone myMachineZone = new Zone(myId);
         myRoot.add(myMachineZone);
 
-		myMib = myMachineZone.newMib(myId);
-		myMachineZone.add(myMib);
-		
-		Zone mySystemZone = new Zone(myId + "/" + Zone.SYSTEM);
+        myMib = myMachineZone.newMib(myId);
+        myMachineZone.add(myMib);
+
+        Zone mySystemZone = new Zone(myId + "/" + Zone.SYSTEM);
         myMachineZone.add(mySystemZone);
 
-		myMib = mySystemZone.newMib(myId);
-		mySystemZone.add(myMib);
-		myMib.setIssued(System.currentTimeMillis());
-		myMib.setNMembers(1);
-		myMib.setContacts(myContactsSet);
-		myMib.setServers(myContactsSet);		
-		    	
+        myMib = mySystemZone.newMib(myId);
+        mySystemZone.add(myMib);
+        myMib.setIssued(System.currentTimeMillis());
+        myMib.setNMembers(1);
+        myMib.setContacts(myContactsSet);
+        myMib.setServers(myContactsSet);
+
         Iterator<HostDetails> mySeeds = mySeedDetails.iterator();
         while (mySeeds.hasNext()) {
             try {
@@ -99,55 +98,56 @@ public class Main {
             }
         }
 
-    	if (isInteractive()) {
-    		// Basics are now setup, start the shell and leave everything else to the user
-    		//
-    		new Interpreter().eval("desktop()");
-    	} else {
-    		new Interpreter().source("config/init.bsh");
-    		
-    		publishAdvert();
-    		
-    		Thread myGossiper = new Thread(new Gossiper(_service, 30000));
-    		myGossiper.start();
+        if (isInteractive()) {
+            // Basics are now setup, start the shell and leave everything else to the user
+            //
+            new Interpreter().eval("desktop()");
+        } else {
+            new Interpreter().source("config/init.bsh");
+
+            publishAdvert();
+
+            Thread myGossiper = new Thread(new Gossiper(_service, 30000));
+            myGossiper.start();
 
             Thread myCuller = new Thread(new Culler(60000));
             myCuller.start();
 
-    		/*
-    		  Thread myDumper = new MibDumper();
-    		  myDumper.start();
-    		*/
-    	}
-	}
+            /*
+            Thread myDumper = new MibDumper();
+            myDumper.start();
+             */
+        }
+    }
 
-	static boolean isInteractive() {
-		return (System.getProperty(INTERACTIVE_PROP) != null);
-	}
+    static boolean isInteractive() {
+        return (System.getProperty(INTERACTIVE_PROP) != null);
+    }
 
-	public static void publishAdvert() throws IOException {
-		Properties myProps = new Properties();
-		myProps.put(NodeListener.ADVERT_ID_FIELD, LocalID.get());
-	
-    	RegistrarFactory.getRegistrar().sample(TYPE, new NodeListener(_service, _service.getPort()));
-    	RegistrarFactory.getRegistrar().register(TYPE, NetworkUtils.getWorkableInterface(), 
-    			_service.getPort(), myProps);	    	
-	}
-	
-	private static class MibDumper extends Thread {
-		MibDumper() {
-		}
-		
-		public void run() {
-			while (true) {
-				try {
-					Thread.sleep(30000);
-				} catch (InterruptedException anIE) {
-					//					
-				}
-				
-				Zones.getRoot().dumpTree("");
-			}
-		}
-	}
+    public static void publishAdvert() throws IOException {
+        Properties myProps = new Properties();
+        myProps.put(NodeListener.ADVERT_ID_FIELD, LocalID.get());
+
+        RegistrarFactory.getRegistrar().sample(TYPE, new NodeListener(_service, _service.getPort()));
+        RegistrarFactory.getRegistrar().register(TYPE, NetworkUtils.getWorkableInterface(),
+                _service.getPort(), myProps);
+    }
+
+    private static class MibDumper extends Thread {
+
+        MibDumper() {
+        }
+
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException anIE) {
+                    //
+                }
+
+                Zones.getRoot().dumpTree("");
+            }
+        }
+    }
 }

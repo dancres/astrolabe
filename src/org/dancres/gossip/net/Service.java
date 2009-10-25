@@ -33,75 +33,79 @@ import org.slf4j.LoggerFactory;
  * and register <code>Servlets</code> to support various requests.
  */
 public class Service {
+
     private static Logger _logger = LoggerFactory.getLogger(Service.class);
-	
-	private HttpClient _client;
-	private SocketConnector _connector;
-	private Server _server;
-	private ServletHandler _handler;
-	private int _port;
-	private String _root;
-	
-	public Service(String aRoot) throws Exception {
-		if (!aRoot.startsWith("/"))
-			throw new IllegalArgumentException("Root must start with /");
-		if (aRoot.endsWith("/"))
-			throw new IllegalArgumentException("Root must not end with /");
-		
-		_root = aRoot;
-		
-		HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+    private HttpClient _client;
+    private SocketConnector _connector;
+    private Server _server;
+    private ServletHandler _handler;
+    private int _port;
+    private String _root;
 
-		// Create and initialize scheme registry 
-		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+    public Service(String aRoot) throws Exception {
+        if (!aRoot.startsWith("/")) {
+            throw new IllegalArgumentException("Root must start with /");
+        }
+        if (aRoot.endsWith("/")) {
+            throw new IllegalArgumentException("Root must not end with /");
+        }
 
-		// Create an HttpClient with the ThreadSafeClientConnManager.
-		// This connection manager must be used if more than one thread will
-		// be using the HttpClient.
-		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+        _root = aRoot;
 
-		_client = new DefaultHttpClient(cm, params);	
-		
+        HttpParams params = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
+        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+
+        // Create and initialize scheme registry
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+
+        // Create an HttpClient with the ThreadSafeClientConnManager.
+        // This connection manager must be used if more than one thread will
+        // be using the HttpClient.
+        ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+
+        _client = new DefaultHttpClient(cm, params);
+
         _server = new Server();
-        SocketConnector myConnector=new SocketConnector();
+        SocketConnector myConnector = new SocketConnector();
         _server.setConnectors(new Connector[]{myConnector});
-        
-        _handler=new ServletHandler();
-        _server.setHandler(_handler);
-        
-        _server.start();
-        
-        _logger.info("Connected on: " + myConnector.getHost() + ":" + myConnector.getLocalPort());
-        
-        _port = myConnector.getLocalPort();
-	}
-	
-	public HttpClient getClient() {
-		return _client;
-	}
-	
-	public int getPort() {
-		return _port;
-	}
 
-	public void add(HttpServlet aServlet, String aRoot) {
-		if (aRoot.startsWith("/"))
-			throw new IllegalArgumentException("Root must not start with /");
-		if (aRoot.endsWith("/"))
-			throw new IllegalArgumentException("Root must not end with /");
-		
-        _handler.addServletWithMapping(new ServletHolder(aServlet), _root + "/" + aRoot);        		
-	}
-	
-	public String getRoot(String aRoot) {
-		return _root + "/" + aRoot;
-	}
-	
-	public HostDetails getContactDetails() throws IOException {
-		return new HostDetails(NetworkUtils.getWorkableAddress().getHostName(), getPort());		
-	}
+        _handler = new ServletHandler();
+        _server.setHandler(_handler);
+
+        _server.start();
+
+        _logger.info("Connected on: " + myConnector.getHost() + ":" + myConnector.getLocalPort());
+
+        _port = myConnector.getLocalPort();
+    }
+
+    public HttpClient getClient() {
+        return _client;
+    }
+
+    public int getPort() {
+        return _port;
+    }
+
+    public void add(HttpServlet aServlet, String aRoot) {
+        if (aRoot.startsWith("/")) {
+            throw new IllegalArgumentException("Root must not start with /");
+        }
+        if (aRoot.endsWith("/")) {
+            throw new IllegalArgumentException("Root must not end with /");
+        }
+
+        _handler.addServletWithMapping(new ServletHolder(aServlet), _root + "/" + aRoot);
+    }
+
+    public String getRoot(String aRoot) {
+        return _root + "/" + aRoot;
+    }
+
+    public HostDetails getContactDetails() throws IOException {
+        return new HostDetails(NetworkUtils.getWorkableAddress().getHostName(), getPort());
+    }
 }
