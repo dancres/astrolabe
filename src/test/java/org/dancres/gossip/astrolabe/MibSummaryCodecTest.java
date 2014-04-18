@@ -18,8 +18,8 @@ public class MibSummaryCodecTest {
 	private Set<MibSummary> _populatedSummary;
 	
 	@Before public void init() {
-		_emptySummary = new HashSet<MibSummary>();
-		_populatedSummary = new HashSet<MibSummary>();
+		_emptySummary = new HashSet<>();
+		_populatedSummary = new HashSet<>();
 		
 		_populatedSummary.add(new MibSummary("/dancres/dredd/1", "/dancres/dredd", 12345));
 		_populatedSummary.add(new MibSummary("/dancres/dredd/2", "/dancres/dredd", 67890));		

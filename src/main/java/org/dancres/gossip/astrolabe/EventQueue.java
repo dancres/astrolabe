@@ -15,7 +15,7 @@ import org.dancres.gossip.io.Exportable;
  * Tracks all the interesting happenings in a Zone
  */
 public class EventQueue implements Exportable {
-    private ArrayList<Event> _events = new ArrayList<Event>();
+    private ArrayList<Event> _events = new ArrayList<>();
 
     public void add(Event anEvent) {
         synchronized(this) {
@@ -55,7 +55,7 @@ public class EventQueue implements Exportable {
 
     public List<Event> getEvents() {
         synchronized(this) {
-            ArrayList<Event> myDupe = new ArrayList<Event>(_events);
+            ArrayList<Event> myDupe = new ArrayList<>(_events);
 
             return myDupe;
         }

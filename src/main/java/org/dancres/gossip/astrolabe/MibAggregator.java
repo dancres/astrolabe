@@ -29,8 +29,8 @@ public class MibAggregator {
          * Mib of _zone.
          */
 
-        HashMap<String, Script> myScriptMap = new HashMap<String, Script>();
-        Collection<Mib> myMibList = new ArrayList<Mib>();
+        HashMap<String, Script> myScriptMap = new HashMap<>();
+        Collection<Mib> myMibList = new ArrayList<>();
         Collection<Zone> myZoneList = _zone.getChildren();
         Iterator<Zone> myZones = myZoneList.iterator();
 

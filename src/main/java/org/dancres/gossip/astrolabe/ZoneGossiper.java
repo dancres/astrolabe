@@ -78,7 +78,7 @@ public class ZoneGossiper {
     public void run() {
         _logger.info("Looking to gossip about: " + _zone.getId() + "(" + _zone.getName() + ")");
 
-        ArrayList<Zone> myChildZones = new ArrayList<Zone>(_zone.getChildren());
+        ArrayList<Zone> myChildZones = new ArrayList<>(_zone.getChildren());
 
         // If there's only one child, it must be ours as we gossip along the self-chain and so no gossiping required
         //

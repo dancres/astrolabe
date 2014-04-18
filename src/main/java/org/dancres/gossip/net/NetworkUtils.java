@@ -22,13 +22,13 @@ public class NetworkUtils {
 
     private static NetworkInterface _workableInterface = null;
     private static SortedSet<NetworkInterface> _workableInterfaces = 
-    	new TreeSet<NetworkInterface>(new NetworkInterfaceComparator());
+    	new TreeSet<>(new NetworkInterfaceComparator());
 
     private static class NetworkInterfaceComparator implements Comparator<NetworkInterface> {
 
         public int compare(NetworkInterface anO, NetworkInterface anotherO) {
-            NetworkInterface myA = (NetworkInterface) anO;
-            NetworkInterface myB = (NetworkInterface) anotherO;
+            NetworkInterface myA = anO;
+            NetworkInterface myB = anotherO;
 
             String myAName = myA.getName();
             String myBName = myB.getName();

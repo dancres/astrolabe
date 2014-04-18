@@ -63,7 +63,7 @@ import java.util.Map;
 public class Certificate {
     public static final String ATTRIBUTE_PREDICATE = "&";
 
-    private HashMap<String, String> _attributes = new HashMap<String, String>();
+    private HashMap<String, String> _attributes = new HashMap<>();
 
     public Certificate(HashMap<String, String> anAttrs) {
         _attributes = anAttrs;
@@ -82,7 +82,7 @@ public class Certificate {
     }
 
     public static Certificate create(Reader aReader) throws IOException {
-        HashMap<String, String> myAttrs = new HashMap<String, String>();
+        HashMap<String, String> myAttrs = new HashMap<>();
         BufferedReader myReader = new BufferedReader(aReader);
         StringBuffer myValueBuffer = null;
         String myVarName = null;

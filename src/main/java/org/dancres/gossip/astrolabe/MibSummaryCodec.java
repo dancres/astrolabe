@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 public class MibSummaryCodec {
 	public Set<MibSummary> getSummary(Reader aReader) throws IOException {
 		Gson myGson = new Gson();
-		HashSet<MibSummary> mySet = new HashSet<MibSummary>();
+		HashSet<MibSummary> mySet = new HashSet<>();
 		
 		BufferedReader myReader = new BufferedReader(aReader);
 		String myInput = myReader.readLine();

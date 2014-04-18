@@ -68,7 +68,7 @@ public class GossipServlet extends HttpServlet {
 		Set<MibSummary> myRemoteMibs = new MibSummaryCodec().getSummary(aReq.getReader());
 		
 		// Need the intersection
-		Set<MibSummary> myIntersection = new HashSet<MibSummary>(myLocalMibs);
+		Set<MibSummary> myIntersection = new HashSet<>(myLocalMibs);
 		myIntersection.retainAll(myRemoteMibs);
 		
 		// Remove the common summaries - those with equal id and rep and identical isssued timestamps

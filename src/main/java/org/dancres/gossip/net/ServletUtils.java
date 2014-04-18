@@ -6,7 +6,7 @@ import java.util.Map;
 public class ServletUtils {
 	public static Map<String, String> getQueryMap(String aQuery) {
 		String[] myParams = aQuery.split("&");
-		Map<String, String> myMap = new HashMap<String, String>();
+		Map<String, String> myMap = new HashMap<>();
 
 		for (int i = 0; i < myParams.length; i++)  {
 			String myName = myParams[i].split("=")[0];

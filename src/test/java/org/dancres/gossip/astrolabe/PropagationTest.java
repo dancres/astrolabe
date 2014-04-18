@@ -21,7 +21,7 @@ public class PropagationTest {
 		LocalID.set(myId);
 
     	HostDetails myContactDetails = new HostDetails("rhubarb", 8192);
-    	HashSet<HostDetails> myContactsSet = new HashSet<HostDetails>();
+    	HashSet<HostDetails> myContactsSet = new HashSet<>();
     	myContactsSet.add(myContactDetails);
 
 		Zone myRoot = new Zone();

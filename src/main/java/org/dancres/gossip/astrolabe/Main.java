@@ -34,7 +34,7 @@ public class Main {
      */
     public static void main(String[] anArgs) throws Exception {
         String myId = null;
-        LinkedList<HostDetails> mySeedDetails = new LinkedList<HostDetails>();
+        LinkedList<HostDetails> mySeedDetails = new LinkedList<>();
 
         if (anArgs.length == 1) {
             myId = anArgs[0];
@@ -64,7 +64,7 @@ public class Main {
                 _service.getPort());
 
         HostDetails myContactDetails = _service.getContactDetails();
-        HashSet<HostDetails> myContactsSet = new HashSet<HostDetails>();
+        HashSet<HostDetails> myContactsSet = new HashSet<>();
         myContactsSet.add(myContactDetails);
 
         Zone myRoot = new Zone();
