@@ -96,9 +96,13 @@ public class BonjourRegistrar implements Registrar, BrowseListener, ResolveListe
 		
 		if (aListener != null) {
 			Properties myProperties = new Properties();
-			
+
 			for (int i = 0; i < aDescription.size(); i++) {
-				myProperties.put(aDescription.getKey(i), aDescription.getValueAsString(i));
+                String myKey = aDescription.getKey(i);
+                String myValue = aDescription.getValueAsString(i);
+
+                if ((myKey != null) && (myValue != null))
+				    myProperties.put(aDescription.getKey(i), aDescription.getValueAsString(i));
 			}
 			
 			aListener.found(new HostDetails(aHostName, aPort, myProperties));
