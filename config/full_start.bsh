@@ -1,8 +1,8 @@
 import org.dancres.gossip.astrolabe.*;
 
-// The standard startup script for an Astrolabe node
-// Once this has been run, the node goes active and visible
-//
+// Running this script from the Astrolabe interactive bean-shell window results
+// in the node being fully initialised with the oppportunity to examine or
+// manipulate the runtime state
 
 Zone root = Zones.getRoot();
 Zone mac = root.find(LocalID.get());
@@ -10,8 +10,6 @@ Zone sys = mac.get("system");
 
 Mib sysMib = sys.getMib();
 
-// Install the default aggregation script
-//
 InputStream myFile = new FileInputStream("config/default.bsh");
 Script myScr = Script.create(myFile);
 myFile.close();
@@ -20,3 +18,7 @@ sysMib.getAttributes().put(myScr.getName(), myScr);
 
 new AggregationProcess().run();
 
+Main.publishAdvert();
+
+new Thread(new Gossiper(Main._service, 30000)).start();
+new Thread(new Culler(60000)).start();
