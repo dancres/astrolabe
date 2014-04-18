@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.junit.*;
-import org.junit.Assert.*;
 
 public class ZoneTest {
 	private Zone _Root;

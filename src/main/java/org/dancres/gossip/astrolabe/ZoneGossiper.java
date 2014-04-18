@@ -1,6 +1,5 @@
 package org.dancres.gossip.astrolabe;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,10 +8,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -23,9 +19,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.dancres.gossip.discovery.HostDetails;
-import org.dancres.gossip.net.NetworkUtils;
 import org.dancres.gossip.net.Service;
-import org.dancres.gossip.peersampling.RemotePeerSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

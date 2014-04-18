@@ -1,7 +1,6 @@
 package org.dancres.gossip.astrolabe;
 
 import org.junit.*;
-import org.junit.Assert.*;
 
 public class CullTest {
 

@@ -1,10 +1,8 @@
 package org.dancres.gossip.astrolabe;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import org.junit.*;
-import org.junit.Assert.*;
 
 public class EventTest {
     private Zone _root;

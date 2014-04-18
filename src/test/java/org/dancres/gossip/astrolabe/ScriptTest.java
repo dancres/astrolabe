@@ -3,7 +3,6 @@ package org.dancres.gossip.astrolabe;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import org.junit.*;
-import org.junit.Assert.*;
 
 public class ScriptTest {
     private StringBuffer _script;

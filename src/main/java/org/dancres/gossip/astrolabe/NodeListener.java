@@ -1,7 +1,6 @@
 package org.dancres.gossip.astrolabe;
 
 import java.net.InetAddress;
-import java.util.HashSet;
 
 import org.dancres.gossip.discovery.DiscoveryListener;
 import org.dancres.gossip.discovery.HostDetails;

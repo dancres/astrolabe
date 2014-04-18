@@ -2,7 +2,6 @@ package org.dancres.gossip.discovery;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -11,8 +10,6 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
 import org.dancres.gossip.net.NetworkUtils;
-
-import com.apple.dnssd.TXTRecord;
 
 /**
  * @todo Complete implementation

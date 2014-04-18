@@ -2,14 +2,11 @@ package org.dancres.gossip.astrolabe;
 
 import org.dancres.gossip.net.ServletUtils;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

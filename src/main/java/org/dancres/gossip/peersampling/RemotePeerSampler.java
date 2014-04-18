@@ -26,11 +26,6 @@ import org.dancres.gossip.discovery.HostDetails;
 import org.dancres.gossip.discovery.RegistrarFactory;
 import org.dancres.gossip.net.NetworkUtils;
 import org.dancres.gossip.net.Service;
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.bio.SocketConnector;
-import org.mortbay.jetty.servlet.ServletHandler;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

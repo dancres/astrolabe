@@ -2,7 +2,6 @@ package org.dancres.gossip.astrolabe;
 
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import org.dancres.gossip.io.Exportable;
 

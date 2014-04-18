@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import org.dancres.gossip.discovery.HostDetails;
 import org.junit.*;
-import org.junit.Assert.*;
 
 public class PropagationTest {
     private Script _first;

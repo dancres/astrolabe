@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.junit.*;
-import org.junit.Assert.*;
 
 public class CertificateTest {
 
