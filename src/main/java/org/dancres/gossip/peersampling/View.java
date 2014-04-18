@@ -3,16 +3,12 @@ package org.dancres.gossip.peersampling;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
+import java.lang.reflect.Type;
+import java.util.*;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.dancres.gossip.core.Peer;
 import org.dancres.gossip.discovery.HostDetails;
 import org.dancres.gossip.io.Exportable;
@@ -20,9 +16,8 @@ import org.dancres.gossip.io.Exportable;
 public class View implements Exportable {
 	private static 	Random _random = new Random();
 	private static Comparator<PeerImpl> _peerSorter = new PeerSorter();
-	private static JsonFactory _jsonFactory = new JsonFactory();
 	
-	private HashSet<PeerImpl> _peers = new HashSet<PeerImpl>();
+	private final HashSet<PeerImpl> _peers;
 	private int _size;
 	
 	private static class PeerSorter implements Comparator<PeerImpl> {
@@ -35,7 +30,9 @@ public class View implements Exportable {
 		private String _hostName;
 		private int _port;
 		private int _hops;
-		
+
+        PeerImpl() {}
+
 		PeerImpl(String aHostName, int aPort, int aHopCount) {
 			_hostName = aHostName;
 			_port = aPort;
@@ -80,32 +77,20 @@ public class View implements Exportable {
 	}
 
 	public View(int aSize) {
-		_size = aSize;
+		this(aSize, new HashSet<PeerImpl>());
 	}
 
 	private View(int aSize, HashSet<PeerImpl> aPeers) {
 		_size = aSize;
-		_peers = new HashSet<PeerImpl>(aPeers);
+		_peers = new HashSet<>(aPeers);
 	}
 	
 	public View(Reader aReader) throws IOException {
-		JsonParser myParser = _jsonFactory.createJsonParser(aReader);
-		while (myParser.nextToken() != null) {
-			String myHost = myParser.getText();
-			
-			if (myParser.nextToken() == null)
-				throw new IOException("Bad peer spec - no port");
-			
-			int myPort = myParser.getIntValue();
-			
-			if (myParser.nextToken() == null)
-				throw new IOException("Bad peer spec - no hops");
-			
-			int myHops = myParser.getIntValue();
-			
-			_peers.add(new PeerImpl(myHost, myPort, myHops));
-		}		
-		myParser.close();
+        Gson myGson = new GsonBuilder().create();
+
+        Type myType = new TypeToken<Collection<PeerImpl>>(){}.getType();
+        Collection<PeerImpl> myPeers = myGson.fromJson(aReader, myType);
+        _peers = new HashSet<>(myPeers);
 	}
 
 	/**
@@ -116,7 +101,7 @@ public class View implements Exportable {
 		
 		synchronized(_peers) {
 			myPeers = new PeerImpl[_peers.size()];
-			myPeers = (PeerImpl[]) _peers.toArray(myPeers);			
+			myPeers = _peers.toArray(myPeers);
 		}
 		
 		if (myPeers.length == 0)
@@ -129,7 +114,7 @@ public class View implements Exportable {
 
 	public void add(HostDetails aHostDetails, int aHopCount) {
 		PeerImpl myPeer = new PeerImpl(aHostDetails.getHostName(), aHostDetails.getPort(), aHopCount);
-		HashSet<PeerImpl> mySet = new HashSet<PeerImpl>();
+		HashSet<PeerImpl> mySet = new HashSet<>();
 		mySet.add(myPeer);
 		View myView = new View(1, mySet);
 		merge(myView);
@@ -160,7 +145,7 @@ public class View implements Exportable {
 		synchronized(_peers) {
 			// No simple way to populate a map from a set and no easy way to get a member back out of a set, sigh
 			//		
-			HashMap<PeerImpl, PeerImpl> myMap = new HashMap<PeerImpl, PeerImpl>();
+			HashMap<PeerImpl, PeerImpl> myMap = new HashMap<>();
 			for (PeerImpl myPeer: _peers) {
 				myMap.put(myPeer, myPeer);
 			}
@@ -185,11 +170,11 @@ public class View implements Exportable {
 			//
 			if (_peers.size() > _size) {
 				PeerImpl[] myPeers = new PeerImpl[_peers.size()];
-				myPeers = (PeerImpl[]) _peers.toArray(myPeers);
+				myPeers = _peers.toArray(myPeers);
 				Arrays.sort(myPeers, _peerSorter);
 				
 				_peers.clear();
-				ArrayList<PeerImpl> myCandidates = new ArrayList<PeerImpl>(Arrays.asList(myPeers));
+				ArrayList<PeerImpl> myCandidates = new ArrayList<>(Arrays.asList(myPeers));
 
 				while (_peers.size() < _size) {
 					_peers.add(myCandidates.remove(_random.nextInt(myCandidates.size())));					
@@ -207,16 +192,10 @@ public class View implements Exportable {
 	}
 
 	public void export(Writer aWriter) throws IOException {
-		JsonGenerator myGenerator = _jsonFactory.createJsonGenerator(aWriter);
-		myGenerator.useDefaultPrettyPrinter();
-		
+        Gson myGson = new GsonBuilder().create();
+
 		synchronized(_peers) {
-			for (PeerImpl myPeer : _peers) {
-				myGenerator.writeString(myPeer.getHostName());
-				myGenerator.writeNumber(myPeer.getPort());
-				myGenerator.writeNumber(myPeer.getHops());
-			}			
+            myGson.toJson(_peers, aWriter);
 		}
-		myGenerator.close();
-	}		
+	}
 }
