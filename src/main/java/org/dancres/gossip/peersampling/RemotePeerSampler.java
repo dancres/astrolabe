@@ -46,7 +46,7 @@ public class RemotePeerSampler implements DiscoveryListener, PeerSampler {
 	
 	public static void main(String anArgs[]) {
 		try {
-			Service myService = new Service("/gossip/");
+			Service myService = new Service("/gossip");
 			RemotePeerSampler mySampler = new RemotePeerSampler(myService, 16, true, null);
 
 			if (anArgs.length == 2) {
@@ -59,13 +59,17 @@ public class RemotePeerSampler implements DiscoveryListener, PeerSampler {
 			Object myBlocker = new Object();
 			try {
 				synchronized(myBlocker) {
-					myBlocker.wait();
+                    while(true) {
+                        myBlocker.wait();
+                    }
 				}
-			} catch (InterruptedException anIE) {			
+			} catch (InterruptedException anIE) {
+                anIE.printStackTrace(System.err);
 			}
 		} catch (Exception anE) {
 			// Any exception is logged where it happened, so we just exit silently
 			//
+            anE.printStackTrace(System.err);
 			return;
 		}
 	}
