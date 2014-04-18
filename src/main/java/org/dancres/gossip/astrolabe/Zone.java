@@ -40,8 +40,8 @@ public class Zone {
 	private String _id;
 	private String _name;
 	
-	private HashMap<String, Mib> _mibs = new HashMap<String, Mib>();
-	private ConcurrentHashMap<String, Zone> _children = new ConcurrentHashMap<String, Zone>();
+	private HashMap<String, Mib> _mibs = new HashMap<>();
+	private ConcurrentHashMap<String, Zone> _children = new ConcurrentHashMap<>();
 	
 	private boolean _isSelf;
 	private Zone _parent;
@@ -80,7 +80,9 @@ public class Zone {
 		
 		// If we're part of the path for the local id, we belong to "self"
 		//
-		_isSelf = (LocalID.get().startsWith(anId));
+		_isSelf = (anId.startsWith(LocalID.get()));
+
+        _logger.debug("Created zone " + anId + " isSelf " + _isSelf + " for " + LocalID.get());
 	}
 
     public EventQueue getQueue() {
@@ -140,7 +142,7 @@ public class Zone {
 	 */
 	public Mib getMib() {
 		synchronized(_mibs) {
-			if (_isSelf) {
+            if (_isSelf) {
 				return _mibs.get(LocalID.get());
 			} else {
 				Mib myRecent = null;
@@ -177,7 +179,7 @@ public class Zone {
      * @return a list containing the the most recent Mib update from each representative encountered.
      */
 	public Collection<Mib> getMibs() {
-		ArrayList<Mib> myMibs = new ArrayList<Mib>();
+		ArrayList<Mib> myMibs = new ArrayList<>();
 		
 		synchronized(_mibs) {
 			myMibs.addAll(_mibs.values());
@@ -190,7 +192,7 @@ public class Zone {
 	 * @return the set of Mib summaries (id, rep and issued) relevant to this zone for gossip
 	 */
 	public Set<MibSummary> getMibSummaries() {
-		Set<MibSummary> mySummaries = new HashSet<MibSummary>();
+		Set<MibSummary> mySummaries = new HashSet<>();
 		Zone myCurrent = this;
 		do {
 			Collection<Zone> myZoneList = myCurrent.getChildren();
@@ -215,7 +217,7 @@ public class Zone {
 	 */
 	public Collection<Mib> getChildMibs() {
 		Iterator<Zone> myChildren = getChildren().iterator();
-		ArrayList<Mib> myMibs = new ArrayList<Mib>();
+		ArrayList<Mib> myMibs = new ArrayList<>();
 		
 		while (myChildren.hasNext()) {
 			myMibs.add(myChildren.next().getMib());
@@ -268,7 +270,7 @@ public class Zone {
 	 * @return a copy of the child zones of this zone
 	 */
 	public Collection<Zone> getChildren() {
-		ArrayList<Zone> myList = new ArrayList<Zone>();
+		ArrayList<Zone> myList = new ArrayList<>();
 		myList.addAll(_children.values());
 
 		return myList;
