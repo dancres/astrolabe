@@ -103,8 +103,8 @@ public class ZoneGossiper {
 
         // Pick a random contact
         //
-        ArrayList myContacts = new ArrayList(myChosen.getMib().getContacts());
-        HostDetails myContact = (HostDetails) myContacts.get(_random.nextInt(myContacts.size()));
+        ArrayList<HostDetails> myContacts = new ArrayList<>(myChosen.getMib().getContacts());
+        HostDetails myContact = myContacts.get(_random.nextInt(myContacts.size()));
 
         // Assemble relevant MIB details
         //

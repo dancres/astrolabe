@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.dancres.gossip.discovery.HostDetails;
-import org.dancres.gossip.io.Exportable;
 
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class MibImpl implements Mib {
     private static Logger _logger = LoggerFactory.getLogger(MibImpl.class);
 
-	private ConcurrentHashMap _attributes;
+	private ConcurrentHashMap<String, Object> _attributes;
 
 	private long _touched;
 	
@@ -48,12 +47,12 @@ public class MibImpl implements Mib {
 	 * @param aRepresentative is the issuer (<code>LocalID.get()</code>) of the Mib.
 	 */
 	public MibImpl(Zone aZone, String aRepresentative) {
-		_attributes = new ConcurrentHashMap();
+		_attributes = new ConcurrentHashMap<>();
 
         setZone(aZone.getId());
 		setRepresentative(aRepresentative);
-		_attributes.put(ISSUED_ATTR, new Long(0));
-		_attributes.put(NMEMBERS_ATTR, new Long(0));
+		_attributes.put(ISSUED_ATTR, 0);
+		_attributes.put(NMEMBERS_ATTR, 0);
 	    _attributes.put(CONTACTS_ATTR, new HashSet<HostDetails>());
 		_attributes.put(SERVERS_ATTR, new HashSet<HostDetails>());
 	}
@@ -74,7 +73,7 @@ public class MibImpl implements Mib {
     }
 
     public MibImpl dup() {
-        return new MibImpl(_touched, new ConcurrentHashMap(_attributes));
+        return new MibImpl(_touched, new ConcurrentHashMap<>(_attributes));
     }
 
     private void setZone(String anId) {
@@ -93,42 +92,37 @@ public class MibImpl implements Mib {
 		return (String) _attributes.get(REPRESENTATIVE_ATTR);
 	}
 
-	public void setIssued(long anIssued) {
-		getAttributes().put(ISSUED_ATTR, new Long(anIssued));
+	public void setIssued(long anIssued) { getAttributes().put(ISSUED_ATTR, Long.toString(anIssued));
 	}
 
-	public long getIssued() {
-		return ((Long) _attributes.get(ISSUED_ATTR)).longValue();
+	public long getIssued() { return (new Long(_attributes.get(ISSUED_ATTR).toString()));
 	}
 
-	public void setContacts(Set aContacts) {
+	public void setContacts(Set<HostDetails> aContacts) {
 		getAttributes().put(CONTACTS_ATTR, aContacts);
 	}
 	
 	/**
 	 * @return an immutable collection of the contacts
 	 */
-	public Set getContacts() {
-		return Collections.unmodifiableSet((Set) _attributes.get(CONTACTS_ATTR));
+	public Set<HostDetails> getContacts() { return Collections.unmodifiableSet((Set<HostDetails>) _attributes.get(CONTACTS_ATTR));
 	}
 
-	public void setServers(Set aContacts) {
+	public void setServers(Set<HostDetails> aContacts) {
 		getAttributes().put(SERVERS_ATTR, aContacts);
 	}
 	
 	/**
 	 * @return an immutable collection of the servers
 	 */
-	public Set getServers() {
-		return Collections.unmodifiableSet((Set) _attributes.get(SERVERS_ATTR));
+	public Set<HostDetails> getServers() { return Collections.unmodifiableSet((Set<HostDetails>) _attributes.get(SERVERS_ATTR));
 	}
 
-	public void setNMembers(long aNumMembers) {
-		getAttributes().put(NMEMBERS_ATTR, new Long(aNumMembers));
+	public void setNMembers(long aNumMembers) { getAttributes().put(NMEMBERS_ATTR, aNumMembers);
 	}
 	
 	public long getNMembers() {
-		return ((Long) _attributes.get(NMEMBERS_ATTR)).longValue();
+		return ((Long) _attributes.get(NMEMBERS_ATTR));
 	}
 	
 	/**
@@ -161,7 +155,7 @@ public class MibImpl implements Mib {
 	}
 	
 	public void export(Writer aWriter) throws IOException {
-		Map myAttrs = new HashMap(_attributes);
+		Map myAttrs = new HashMap<>(_attributes);
 		
 		Gson myGson = new Gson();
 		GsonUtils myUtils = new GsonUtils(myGson, aWriter);
@@ -170,9 +164,9 @@ public class MibImpl implements Mib {
 	}
 
     private class AttributeFilter implements Attributes {
-        private ConcurrentHashMap _attributes;
+        private ConcurrentHashMap<String, Object> _attributes;
 
-        AttributeFilter(ConcurrentHashMap anAttributes) {
+        AttributeFilter(ConcurrentHashMap<String, Object> anAttributes) {
             _attributes = anAttributes;
         }
 

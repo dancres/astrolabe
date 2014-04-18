@@ -1,6 +1,8 @@
 package org.dancres.gossip.astrolabe;
 
 import java.util.Set;
+
+import org.dancres.gossip.discovery.HostDetails;
 import org.dancres.gossip.io.Exportable;
 
 public interface Mib extends Exportable {
@@ -19,13 +21,13 @@ public interface Mib extends Exportable {
 
 	public String getRepresentative();
 
-	public void setContacts(Set aContacts);
+	public void setContacts(Set<HostDetails> aContacts);
 
-	public Set getContacts();
+	public Set<HostDetails> getContacts();
 
-	public void setServers(Set aContacts);
+	public void setServers(Set<HostDetails> aContacts);
 
-	public Set getServers();
+	public Set<HostDetails> getServers();
 
 	public void setNMembers(long aNumMembers);
 

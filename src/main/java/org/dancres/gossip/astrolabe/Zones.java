@@ -29,7 +29,7 @@ public class Zones {
             Mib myHostsMib = myHostsZone.newMib(aDetails.getId());
             myHostsZone.add(myHostsMib);
 
-            HashSet myDetails = new HashSet();
+            HashSet<HostDetails> myDetails = new HashSet<>();
             myDetails.add(aDetails.getContactDetails());
 
             myHostsMib.setIssued(0);  // Make sure we replace this immediately with updates
