@@ -33,7 +33,7 @@ public class EventQueue implements Exportable {
                 Event myEvent = myEvents.next();
 
                 if (myEvent.hasExpired(myExpiry))
-                    myEvents.remove();;
+                    myEvents.remove();
             }
         }
     }
