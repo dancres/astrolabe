@@ -112,10 +112,7 @@ public class GossipServlet extends HttpServlet {
 	}
 
 	private MibSummary findMatch(MibSummary aMib, Set<MibSummary> aLocalMibSummaries) {
-		Iterator<MibSummary> myMibSummaries = aLocalMibSummaries.iterator();
-		while (myMibSummaries.hasNext()) {
-			MibSummary mySummary = myMibSummaries.next();
-			
+        for (MibSummary mySummary : aLocalMibSummaries) {
 			if ((aMib.getId().equals(mySummary.getId()) && (aMib.getRep().equals(mySummary.getRep())))) {
 				return mySummary;
 			}

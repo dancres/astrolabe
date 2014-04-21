@@ -41,7 +41,7 @@ public class GsonUtilTest {
 		_emptyMap = new HashMap();
 		
 		_populatedMap = new TreeMap();
-		_populatedMap.put("integer", new Integer(5));
+		_populatedMap.put("integer", 5);
 		_populatedMap.put("collection", _populatedList);
 	}
 	

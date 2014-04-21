@@ -27,7 +27,7 @@ public class MibSummaryCodec {
 		BufferedReader myReader = new BufferedReader(aReader);
 		String myInput = myReader.readLine();
 		
-		long myTotal = (myGson.fromJson(myInput, Long.class)).longValue();
+		long myTotal = (myGson.fromJson(myInput, Long.class));
 		
 		for (long i = 0; i < myTotal; i++) {
 			myInput = myReader.readLine();
@@ -37,7 +37,7 @@ public class MibSummaryCodec {
 			String myRep = myGson.fromJson(myInput, String.class);
 			
 			myInput = myReader.readLine();
-			long myIssued = (myGson.fromJson(myInput, Long.class)).longValue();
+			long myIssued = (myGson.fromJson(myInput, Long.class));
 			
 			mySet.add(new MibSummary(myId, myRep, myIssued));
 		}
@@ -50,11 +50,8 @@ public class MibSummaryCodec {
 		
 		myGson.toJson(aSummary.size(), aWriter);
 		aWriter.write("\n");
-		
-		Iterator<MibSummary> mySummaries = aSummary.iterator();
-		while (mySummaries.hasNext()) {
-			MibSummary mySummary = mySummaries.next();
-			
+
+        for (MibSummary mySummary : aSummary) {
 			myGson.toJson(mySummary.getId(), aWriter);
 			aWriter.write("\n");
 			

@@ -116,9 +116,8 @@ public class RemotePeerSampler implements DiscoveryListener, PeerSampler {
 
 			// Now pick a suitable address from those this host has (which will be one on our chosen subnet)
 			//
-			InetAddress[] myAddrs = InetAddress.getAllByName(myHost);
-			for (int i = 0; i < myAddrs.length; i++) {
-				myAddr = myAddrs[i];
+            for (InetAddress myCandidate : InetAddress.getAllByName(myHost)) {
+				myAddr = myCandidate;
 				
 				if (NetworkUtils.isWorkableSubnet(myAddr))
 					break;
@@ -226,7 +225,6 @@ public class RemotePeerSampler implements DiscoveryListener, PeerSampler {
 						myWriter = new OutputStreamWriter(myBuffer);
 						
 						myCurrent.export(myWriter);
-						ByteArrayInputStream myInput = new ByteArrayInputStream(myBuffer.toByteArray());
 
 						ByteArrayEntity myEntity = new ByteArrayEntity(myBuffer.toByteArray());
 						myEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "java/app"));

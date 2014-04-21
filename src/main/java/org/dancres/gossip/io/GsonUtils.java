@@ -42,10 +42,8 @@ public class GsonUtils {
 		//
 		_gson.toJson(aMap.size(), _writer);
 		_writer.write("\n");
-		
-		Iterator myKeys = aMap.keySet().iterator();
-		while (myKeys.hasNext()) {
-			Object myKey = myKeys.next();
+
+        for (Object myKey : aMap.keySet()) {
 			String myKeyType = myKey.getClass().getName();
 
 			// Write the key's type
@@ -79,9 +77,9 @@ public class GsonUtils {
 	
 	private void dumpBytes(String aString) {
 		byte[] myBytes = aString.getBytes();
-		
-		for (int i = 0; i < myBytes.length; i++) {
-			System.out.print(Integer.toHexString(myBytes[i]) + " ");
+
+        for (byte b : myBytes) {
+			System.out.print(Integer.toHexString(b) + " ");
 		}
 		
 		System.out.println();
@@ -123,18 +121,10 @@ public class GsonUtils {
 
 			return myMap;
 		
-		} catch (ClassNotFoundException aCNFE) {
+		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException anE) {
 			IOException myIOE = new IOException();
-			myIOE.initCause(aCNFE);
+			myIOE.initCause(anE);
 			throw myIOE;
-		} catch (IllegalAccessException aIAE) {
-			IOException myIOE = new IOException();
-			myIOE.initCause(aIAE);
-			throw myIOE;			
-		} catch (InstantiationException aIE) {
-			IOException myIOE = new IOException();
-			myIOE.initCause(aIE);
-			throw myIOE;			
 		}
 	}
 	
@@ -162,9 +152,7 @@ public class GsonUtils {
 		
 		// Now write each member of the collection
 		if (myType != null) {
-			Iterator myObjects = aCollection.iterator();
-			while (myObjects.hasNext()) {
-				Object myObject = myObjects.next();
+            for (Object myObject : aCollection) {
 				_gson.toJson(myObject, myType, _writer);
 				_writer.write("\n");
 			}
@@ -190,18 +178,10 @@ public class GsonUtils {
 
 			return myCollection;
 		
-		} catch (ClassNotFoundException aCNFE) {
+		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException anE) {
 			IOException myIOE = new IOException();
-			myIOE.initCause(aCNFE);
+			myIOE.initCause(anE);
 			throw myIOE;
-		} catch (IllegalAccessException aIAE) {
-			IOException myIOE = new IOException();
-			myIOE.initCause(aIAE);
-			throw myIOE;
-		} catch (InstantiationException aIE) {
-			IOException myIOE = new IOException();
-			myIOE.initCause(aIE);
-			throw myIOE;			
 		}
 	}
 }

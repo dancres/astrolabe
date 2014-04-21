@@ -137,10 +137,9 @@ public class ZoneTest {
 		String myName = aZone.getName();
 		
 		System.out.println(anIndent + myName);
-		
-		Iterator<Zone> myZones = aZone.getChildren().iterator();
-		while (myZones.hasNext()) {
-			dumpTree(myZones.next(), anIndent + "  ");
+
+        for (Zone myZone : aZone.getChildren()) {
+			dumpTree(myZone, anIndent + "  ");
 		}
 	}
 }

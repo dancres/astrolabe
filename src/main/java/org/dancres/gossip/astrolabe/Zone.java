@@ -194,12 +194,9 @@ public class Zone {
 		Zone myCurrent = this;
 		do {
 			Collection<Zone> myZoneList = myCurrent.getChildren();
-			Iterator<Zone> myZones = myZoneList.iterator();
-			while (myZones.hasNext()) {
-				Zone myZone = myZones.next();
-				Iterator<Mib> myMibs = myZone.getMibs().iterator();
-				while (myMibs.hasNext()) {
-					Mib myMib = myMibs.next();
+
+            for (Zone myZone : myZoneList) {
+                for (Mib myMib : myZone.getMibs()) {
 					mySummaries.add(new MibSummary(myZone.getId(), myMib.getRepresentative(), myMib.getIssued()));
 				}
 			}
@@ -251,11 +248,7 @@ public class Zone {
          */
         cleanMibs(aDeadTime);
 
-        Iterator<Zone> myZones = _children.values().iterator();
-
-        while (myZones.hasNext()) {
-            Zone myZone = myZones.next();
-
+        for (Zone myZone : _children.values()) {
             if (myZone.isDead(aDeadTime)) {
                 _children.remove(myZone.getName());
                 _queue.add(new Event(Event.ZONE_TYPE, Event.ZONE_REMOVE, _id, myZone.getName()));
@@ -428,11 +421,7 @@ public class Zone {
             return false;
 
         synchronized(_mibs) {
-            Iterator<Mib> myMibs = _mibs.values().iterator();
-
-            while (myMibs.hasNext()) {
-                Mib myMib = myMibs.next();
-
+            for (Mib myMib : _mibs.values()) {
                 if (myMib.getTouched() > anExpiryTime)
                     return false;
             }
@@ -451,10 +440,9 @@ public class Zone {
 		System.out.println(anIndent + myName + ": " + aZone.getMib().getIssued() + ", " + 
 				aZone.getMib().getNMembers() + ", " +
 				aZone.getMib().getRepresentative() + ", " + aZone.isSelf() + ", " + aZone.getMib().getTouched());
-		
-		Iterator<Zone> myZones = aZone.getChildren().iterator();
-		while (myZones.hasNext()) {
-			dumpTree(myZones.next(), anIndent + "  ");
+
+        for (Zone myZone : aZone.getChildren()) {
+			dumpTree(myZone, anIndent + "  ");
 		}
 	}			
 }

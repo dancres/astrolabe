@@ -23,7 +23,7 @@ public class JmDNSRegistrar implements Registrar {
         String myAttrs = "";
         
 		if (anAttrs != null) {
-			StringBuffer myTextProps = new StringBuffer();				
+			StringBuilder myTextProps = new StringBuilder();
 			Enumeration myList = anAttrs.keys();
 			
 			while (myList.hasMoreElements()) {

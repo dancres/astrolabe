@@ -89,11 +89,10 @@ public class Script {
     }
 	
 	private String concat(Collection<String> aStrings) {
-		StringBuffer myConcatenation = new StringBuffer();
-		
-		Iterator<String> myStrings = aStrings.iterator();
-		while (myStrings.hasNext()) {
-			myConcatenation.append(myStrings.next());
+		StringBuilder myConcatenation = new StringBuilder();
+
+        for (String mySubStr : aStrings) {
+			myConcatenation.append(mySubStr);
 			myConcatenation.append(" ");
 		}
 		

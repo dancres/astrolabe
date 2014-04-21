@@ -43,10 +43,9 @@ public class NodeListener implements DiscoveryListener {
 
             // Make sure any hostname is replaced with an address that is appropriate for our chosen network interface
             //
-            InetAddress[] myAddrs = InetAddress.getAllByName(myHost);
-            for (int i = 0; i < myAddrs.length; i++) {
-                if (NetworkUtils.isWorkableSubnet(myAddrs[i])) {
-                    myAddr = myAddrs[i];
+            for (InetAddress myCandidate : InetAddress.getAllByName(myHost)) {
+                if (NetworkUtils.isWorkableSubnet(myCandidate)) {
+                    myAddr = myCandidate;
                 }
             }
 
@@ -57,7 +56,6 @@ public class NodeListener implements DiscoveryListener {
             Zones.addHost(new SeedDetails(myHostsId, new HostDetails(myAddr.getHostAddress(), aHostDetails.getPort())));
         } catch (Exception anE) {
             _logger.warn("Couldn't check host details (ignoring): " + aHostDetails, anE);
-            return;
 		}
 	}		
 }

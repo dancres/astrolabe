@@ -31,11 +31,8 @@ public class MibAggregator {
         HashMap<String, Script> myScriptMap = new HashMap<>();
         Collection<Mib> myMibList = new ArrayList<>();
         Collection<Zone> myZoneList = _zone.getChildren();
-        Iterator<Zone> myZones = myZoneList.iterator();
 
-        while (myZones.hasNext()) {
-            Zone myZone = myZones.next();
-
+        for (Zone myZone : myZoneList) {
             _logger.debug("Examining: " + _zone + " -> " + myZone);
 
             Mib myZoneMib = myZone.getMib();
@@ -70,10 +67,7 @@ public class MibAggregator {
         }
 
         long myIssued = _zone.getMib().getIssued();
-        Iterator<String> myScriptNames = myScriptMap.keySet().iterator();
-
-        while (myScriptNames.hasNext()) {
-            String myScriptName = myScriptNames.next();
+        for (String myScriptName : myScriptMap.keySet()) {
             Script myScript = myScriptMap.get(myScriptName);
 
             try {

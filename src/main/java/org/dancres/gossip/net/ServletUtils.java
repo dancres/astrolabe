@@ -8,10 +8,8 @@ public class ServletUtils {
 		String[] myParams = aQuery.split("&");
 		Map<String, String> myMap = new HashMap<>();
 
-		for (int i = 0; i < myParams.length; i++)  {
-			String myName = myParams[i].split("=")[0];
-			String myValue = myParams[i].split("=")[1];
-			myMap.put(myName, myValue);
+        for (String myParam : myParams) {
+			myMap.put(myParam.split("=")[0], myParam.split("=")[1]);
 		}
 
 		return myMap;

@@ -89,10 +89,9 @@ public class Main {
         myMib.setContacts(myContactsSet);
         myMib.setServers(myContactsSet);
 
-        Iterator<HostDetails> mySeeds = mySeedDetails.iterator();
-        while (mySeeds.hasNext()) {
+        for (HostDetails mySeed : mySeedDetails) {
             try {
-                Zones.addHost(SeedDetails.discover(_service, mySeeds.next()));
+                Zones.addHost(SeedDetails.discover(_service, mySeed));
             } catch (IOException anIOE) {
                 // Discard, already reported and nothing to be done for this host
             }

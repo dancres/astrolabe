@@ -47,11 +47,7 @@ public class ZoneServlet extends HttpServlet {
 			return;
 		}
 
-        Iterator<Zone> myChildren = myZone.getChildren().iterator();
-
-        while (myChildren.hasNext()) {
-            Zone myChild = myChildren.next();
-
+        for (Zone myChild : myZone.getChildren()) {
             myWriter.write(myChild.getName());
             myWriter.write("\n");
         }

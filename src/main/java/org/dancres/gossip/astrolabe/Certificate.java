@@ -151,11 +151,9 @@ public class Certificate {
     }
 
     public String toString() {
-        StringBuffer myBuffer = new StringBuffer("[Certificate] <");
+        StringBuilder myBuffer = new StringBuilder("[Certificate] <");
 
-        Iterator<String> myKeys = _attributes.keySet().iterator();
-        while (myKeys.hasNext()) {
-            String myKey = myKeys.next();
+        for (String myKey : _attributes.keySet()) {
             myBuffer.append(myKey + ": " + _attributes.get(myKey) + ", ");
         }
 

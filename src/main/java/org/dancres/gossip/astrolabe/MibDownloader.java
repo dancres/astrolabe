@@ -49,22 +49,16 @@ public class MibDownloader {
 		
 		public void run() {
 			_logger.debug("UpdateTask is active: " + _summaries.size());
-			
-			Iterator<MibSummary> mySummaries = _summaries.iterator();
-			
-			while (mySummaries.hasNext()) {		
-				
+
+            for (MibSummary mySummary : _summaries) {
+
 				_logger.debug("Got a summary to process");
 				
 				HttpGet myGetMethod = null;
 				HttpResponse myResponse = null;
-				Reader myReader = null;	        	
-				MibSummary mySummary = null;
 				URL myURL = null;
 				
 				try {
-					mySummary = mySummaries.next();
-
                     Zone myLocal = Zones.getRoot().find(mySummary.getId());
 
                     if ((myLocal != null) && (myLocal.isSelf())) {
@@ -108,7 +102,7 @@ public class MibDownloader {
 					HttpEntity entity = myResponse.getEntity();
 
 					if (entity != null) {
-						myReader = new InputStreamReader(entity.getContent());
+						Reader myReader = new InputStreamReader(entity.getContent());
 						MibImpl myMib = new MibImpl(myReader);
 						myReader.close();
 
