@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gson.Gson;

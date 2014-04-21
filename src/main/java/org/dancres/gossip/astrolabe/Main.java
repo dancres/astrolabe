@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bsh.Interpreter;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**

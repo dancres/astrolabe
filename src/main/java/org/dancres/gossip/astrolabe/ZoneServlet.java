@@ -2,7 +2,6 @@ package org.dancres.gossip.astrolabe;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
